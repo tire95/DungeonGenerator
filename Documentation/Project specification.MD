@@ -13,7 +13,7 @@ The goal is to implement two different dungeon generation algorithms and a "solv
 * random walk (generation)
 * flood fill ("solver")
 
-### Cellular automaton ^1 ^2 
+### Cellular automaton
 
 In a cellular automaton, we have a grid of cells with each cell having a certain state at time `t=0`. With each iteration of the cellular automaton (i.e. `t+=1`), the states of the cells will change according to some set of rules that depend on the state of the cell itself and the states of its neighboring cells.
 
@@ -37,7 +37,7 @@ As input, the algorithm will be given
 * the percent of "stone" cells at `t=0`
 * the amount of iterations
 
-### Random walk ^3 ^4
+### Random walk
 
 In random walk, we have one or more walkers that (as the name suggests) walk in random directions.
 
@@ -74,7 +74,7 @@ As input, the algorithm will be given
 * whether a walker is killed when it enters a floor cell
 * the likelihood of spawning a new walker
 
-### Flood fill ^5
+### Flood fill
 
 Flood fill is an algorithm that determines what areas are connected to a certain node in a multidimensional array (literally the bucket fill tool from Paint, GIMP etc.). The algorithm is given a starting node, a target "color", and a replacement "color". Starting from the given node, it will look for nodes that are both connected to the given node and of the target color, change them to the replacement color, and add them to a queue or a stack of nodes. Once the current node has no more target nodes adjacent to it, the algorithm will take a new node from the stack/queue and start over.
 
@@ -86,7 +86,7 @@ The algorithm's time and space complexities depend on the size of the fillable a
 
 ## Sources
 
-1. [Wikipedia, *Cellular automaton*](https://en.wikipedia.org/wiki/Cellular_automaton 
+1. [Wikipedia, *Cellular automaton*](https://en.wikipedia.org/wiki/Cellular_automaton)
 2. [Johnson, L. *et.al.*, *Cellular automata for real-time generationof infinite cave levels*](http://julian.togelius.com/Johnson2010Cellular.pdf)
 3. [Wikipedia, *Random walk*](https://en.wikipedia.org/wiki/Random_walk)
 4. [Noel Berry, *Procedural Generation - The Caves*](http://noelberry.ca/#thecaves)
