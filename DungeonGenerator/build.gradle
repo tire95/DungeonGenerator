@@ -1,6 +1,14 @@
-apply plugin: 'java'
-apply plugin: 'jacoco'
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
 
+    // Apply the application plugin to add support for building an application
+    id 'application'
+
+    id 'jacoco'
+    
+    id 'checkstyle'
+}
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -13,7 +21,7 @@ sourceCompatibility = '1.8'
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'dungeonGenerator.Main'
+    ext.mainClass = 'UI.GUI'
 }
 
 repositories {
@@ -21,13 +29,16 @@ repositories {
     // You may define additional repositories, or even remove "mavenCentral()".
     // Read more about repositories here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+    jcenter()
 }
 
 dependencies {
     // TODO: Add dependencies here ...
     // You can read more about how to add dependency here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
-    testCompile group: 'junit', name: 'junit', version: '4.10'
+    
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
 }
 
 jacocoTestReport {
@@ -35,6 +46,18 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ['**/util/**'])
+        })
+    }
+}
+
+
+run {
+    standardInput = System.in
+    standardOutput = System.out
 }
 
 check.dependsOn jacocoTestReport

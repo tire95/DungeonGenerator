@@ -32,7 +32,9 @@ public class Dungeon {
         int neighbors = 0;
         for (int i = y-1; i <= y+1; i++) {
             for (int j = x-1; j <= x+1; j++) {
-                if ((i != y || j != x)) {
+                if (i < 0 || i >= this.heigth || j < 0 || j >= this.width) {
+                    neighbors++;
+                } else if ((i != y) || (j != x)) {
                     neighbors += this.grid[i][j];
                 }
             }
@@ -61,6 +63,10 @@ public class Dungeon {
     
     public boolean cellIsFloor(int y, int x) {
         return this.grid[y][x] == 0;
+    }
+    
+    public void setGrid(int[][] grid) {
+        this.grid = grid;
     }
     
 }

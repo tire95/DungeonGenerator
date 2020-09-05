@@ -14,23 +14,19 @@ import java.util.Random;
 public class CellularAutomaton {
     private int iterations;
     private Dungeon dungeon;
-    private Dungeon helpDungeon;
     
-    public CellularAutomaton(int iterations, Dungeon d, double stonePercentAtStart) {
+    public CellularAutomaton(int iterations, int heigth, int width) {
         this.iterations = iterations;
-        this.dungeon = d;
-        this.helpDungeon = d;
-        createWalls(stonePercentAtStart);
-        runAutomaton();
+        this.dungeon = new Dungeon(heigth, width);
     }
     
-    private void createWalls(double stonePercentAtStart) {
+    public void createWalls(double stonePercentAtStart) {
         Random rand = new Random();
         int changedCells = 0;
         int dungeonHeigth = this.dungeon.getHeigth();
         int dungeonWidth = this.dungeon.getWidth();
         int totalCells = dungeonWidth * dungeonHeigth;
-        while (100*changedCells / totalCells < stonePercentAtStart) {
+        while (100 * changedCells / totalCells < stonePercentAtStart) {
             int cellX = rand.nextInt(dungeonWidth);
             int cellY = rand.nextInt(dungeonHeigth);
             if (this.dungeon.cellIsFloor(cellY, cellX)) {
@@ -40,24 +36,24 @@ public class CellularAutomaton {
         }
     }
     
-    private void runAutomaton() {
+    public void runAutomaton() {
         int dungeonHeigth = this.dungeon.getHeigth();
         int dungeonWidth = this.dungeon.getWidth();
-        for (int i = 0; i < iterations; i++) {
-            for (int y = 1; y < dungeonHeigth -1 ; y++) {
-                for (int x = 1; x < dungeonWidth -1 ; x++) {
-                    if (this.dungeon.checkNumberOfNeighbors(y, x) >= 5) {
-                        this.helpDungeon.changeCellToStone(y, x);
-                    } else {
-                        this.helpDungeon.changeCellToFloor(y, x);
-                    }
-                }
+        int[][] tempGrid = new int[dungeonHeigth][dungeonWidth];
+        for (int y = 0; y < dungeonHeigth ; y++) {
+            for (int x = 0; x < dungeonWidth ; x++) {
+                tempGrid[y][x] = ((this.dungeon.checkNumberOfNeighbors(y, x) >= 5) ? 1 : 0);
             }
-            this.dungeon = this.helpDungeon;
-            System.out.println("Iteration " + i);
-            this.dungeon.printDungeon();
-            System.out.println("");
         }
+        this.dungeon.setGrid(tempGrid);
+    }
+    
+    public Dungeon getDungeon() {
+        return this.dungeon;
+    }
+    
+    public int getIterations() {
+        return this.iterations;
     }
     
     
