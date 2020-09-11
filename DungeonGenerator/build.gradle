@@ -21,7 +21,7 @@ sourceCompatibility = '1.8'
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'UI.GUI'
+    ext.mainClass = 'ui.GUI'
 }
 
 repositories {
@@ -49,7 +49,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: ['**/util/**'])
+                    exclude: ['**/UI/**'])
         })
     }
 }

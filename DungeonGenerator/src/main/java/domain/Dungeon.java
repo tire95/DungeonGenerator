@@ -3,37 +3,54 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package domain;
 
 /**
- *
+ * Class responsible for the logic on dungeon level.
+ * The state of a cell in the grid is represented as an integer; 0 means floor (walkable), 1 means stone (non-walkable).
  * @author timot
  */
 public class Dungeon {
-    private int width;
-    private int heigth;
+    private int x;
+    private int y;
     private int[][] grid;
     
-    public Dungeon (int heigth, int width) {
-        this.width = width;
-        this.heigth = heigth;
-        this.grid = new int[heigth][width];
+    /**
+     * Constructor for the dungeon
+     * @param y dungeon's height
+     * @param x dungeon's width
+     */
+    public Dungeon(int y, int x) {
+        this.x = x;
+        this.y = y;
+        this.grid = new int[y][x];
     }
     
-    public int getWidth() {
-        return this.width;
+    public int getX() {
+        return this.x;
     }
     
-    public int getHeigth() {
-        return this.heigth;
+    public int getY() {
+        return this.y;
     }
     
-    public int checkNumberOfNeighbors(int y, int x) {
+    /**
+     * Returns the number of neighboring cells with the state stone (i.e. 1).
+     * For a cell at an edge/corner, every "cell" that's outside of the grid's bounds is counted as a stone cell; otherwise cellular automaton wouldn't work properly
+     * @param y the y coordinate of the given cell
+     * @param x the x coordinate of the given cell
+     * @return the number of stone neighbors for the given cell
+     */
+    public int checkNumberOfStoneNeighbors(int y, int x) {
         int neighbors = 0;
-        for (int i = y-1; i <= y+1; i++) {
-            for (int j = x-1; j <= x+1; j++) {
-                if (i < 0 || i >= this.heigth || j < 0 || j >= this.width) {
+        for (int i = y - 1; i <= y + 1; i++) {
+            for (int j = x - 1; j <= x + 1; j++) {
+                
+                // if a "cell" is outside the grid's bounds, count it as "stone"
+                if (i < 0 || i >= this.y || j < 0 || j >= this.x) {
                     neighbors++;
+                    
                 } else if ((i != y) || (j != x)) {
                     neighbors += this.grid[i][j];
                 }
@@ -50,23 +67,16 @@ public class Dungeon {
         this.grid[y][x] = 0;
     }
     
-    public void printDungeon() {
-        for (int[] y : this.grid)
-        {
-           for (int x : y)
-           {
-                System.out.print(x);
-           }
-           System.out.println();
-        }
-    }
-    
     public boolean cellIsFloor(int y, int x) {
         return this.grid[y][x] == 0;
     }
     
     public void setGrid(int[][] grid) {
         this.grid = grid;
+    }
+    
+    public int[][] getGrid() {
+        return this.grid;
     }
     
 }
