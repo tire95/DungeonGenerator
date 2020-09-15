@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author timot
  */
 public class RandomWalk {
-    private Queue<Walker> walkers;
+    private Queue<Cell> walkers;
     private Dungeon dungeon;
     private int spawnChance;
     private int digPercent;
@@ -30,7 +30,7 @@ public class RandomWalk {
      * @param turnChance chance of walker turning 90 degrees (percentage)
      */
     public RandomWalk(int y, int x, int spawnChance, int digPercent, int turnChance) {
-        this.walkers = new ArrayDeque<Walker>();
+        this.walkers = new ArrayDeque<Cell>();
         this.dungeon = new Dungeon(y, x);
         this.spawnChance = spawnChance;
         this.digPercent = digPercent;
@@ -46,12 +46,12 @@ public class RandomWalk {
         int dungeonY = this.dungeon.getY();
         int totalCells = dungeonX * dungeonY;
         int changedCells = 0;
-        this.walkers.add(new Walker(dungeonY / 2, dungeonX / 2, turnChance));
+        this.walkers.add(new Cell(dungeonY / 2, dungeonX / 2, turnChance));
         
         while ((100 * changedCells / totalCells) < this.digPercent) {
-            Walker nextWalker = this.walkers.poll();
-//            nextWalker.simpleWalk();
-            nextWalker.walk();
+            Cell nextWalker = this.walkers.poll();
+            nextWalker.simpleWalk();
+//            nextWalker.walk();
             int currentX = nextWalker.getCurrentX();
             int currentY = nextWalker.getCurrentY();
             
@@ -68,14 +68,14 @@ public class RandomWalk {
                     
                     // randomly spawn a new walker where the current walker is
                     if (ThreadLocalRandom.current().nextInt(1, 101) < this.spawnChance) {
-                        this.walkers.add(new Walker(currentY, currentX, turnChance));
+                        this.walkers.add(new Cell(currentY, currentX, turnChance));
                     }
                 }
             }
             
             // if the last walker walked out of the dungeon, spawn a new walker
             if (this.walkers.isEmpty()) {
-                this.walkers.add(new Walker(dungeonY / 2, dungeonX / 2, turnChance));
+                this.walkers.add(new Cell(dungeonY / 2, dungeonX / 2, turnChance));
             }
         }
     }
@@ -96,7 +96,7 @@ public class RandomWalk {
         }
     }
     
-    public Queue<Walker> getWalkers() {
+    public Queue<Cell> getWalkers() {
         return this.walkers;
     }
     

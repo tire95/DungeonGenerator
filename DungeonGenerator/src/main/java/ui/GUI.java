@@ -8,6 +8,7 @@ package ui;
 
 import domain.CellularAutomaton;
 import domain.Dungeon;
+import domain.FloodFill;
 import domain.RandomWalk;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -60,13 +61,16 @@ public class GUI extends Application {
     }
     
     private void automatonView(Stage stage) {
-        CellularAutomaton c = new CellularAutomaton(20, 200, 100, 40);
+        CellularAutomaton c = new CellularAutomaton(3, 200, 100, 55);
         c.initializeDungeon();
+        FloodFill f = new FloodFill(2);
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(10));
         Button startAutomaton = new Button("Start cellular automaton");
         Button resetAutomaton = new Button("Reset automaton");
+        Button cleanUp = new Button("Clean up");
+        Button floodFill = new Button("Flood fill");
         
         GridPane grid = new GridPane();
                 
@@ -74,7 +78,7 @@ public class GUI extends Application {
         
         grid.setAlignment(Pos.CENTER);
         
-        box.getChildren().addAll(startAutomaton, resetAutomaton, grid);
+        box.getChildren().addAll(startAutomaton, cleanUp, floodFill, resetAutomaton, grid);
         
         startAutomaton.setOnAction(e -> {
             c.runAutomaton();
@@ -86,6 +90,25 @@ public class GUI extends Application {
             c.initializeDungeon();
             drawDungeon(grid, c.getDungeon());
         });
+                
+        cleanUp.setOnAction(e -> {
+            c.getDungeon().cleanUp();
+            drawDungeon(grid, c.getDungeon());
+        });
+        
+        floodFill.setOnAction(e -> {
+            f.setDungeon(c.getDungeon());
+            outerloop:
+            for (int y = 0; y < 200; y++) {
+                for (int x = 0; x < 100; x++) {
+                    if (f.getDungeon().cellIsFloor(y, x)) {
+                        f.startFloodFill(y, x);
+                        break outerloop;
+                    }
+                }
+            }
+            drawDungeon(grid, f.getDungeon());
+        });
         
         Scene scene = new Scene(box, 1600, 800);
         stage.setScene(scene);
@@ -93,12 +116,15 @@ public class GUI extends Application {
     }
     
     private void walkView(Stage stage) {
-        RandomWalk w = new RandomWalk(200, 100, 5, 20, 90);
+        RandomWalk w = new RandomWalk(200, 100, 10, 30, 20);
+        FloodFill f = new FloodFill(2);
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(10));
         Button startRandom = new Button("Start random walk");
         Button resetRandom = new Button("Reset random walk");
+        Button cleanUp = new Button("Clean up");
+        Button floodFill = new Button("Flood fill");
         
         GridPane grid = new GridPane();
                 
@@ -106,7 +132,7 @@ public class GUI extends Application {
         
         grid.setAlignment(Pos.CENTER);
         
-        box.getChildren().addAll(startRandom, resetRandom, grid);
+        box.getChildren().addAll(startRandom, cleanUp, floodFill, resetRandom, grid);
         
         startRandom.setOnAction(e -> {
             w.runRandomWalk();
@@ -118,6 +144,24 @@ public class GUI extends Application {
             drawDungeon(grid, w.getDungeon());
         });
         
+        cleanUp.setOnAction(e -> {
+            w.getDungeon().cleanUp();
+            drawDungeon(grid, w.getDungeon());
+        });
+        
+        floodFill.setOnAction(e -> {
+            f.setDungeon(w.getDungeon());
+            for (int y = 0; y < 200; y++) {
+                for (int x = 0; x < 100; x++) {
+                    if (f.getDungeon().cellIsFloor(y, x)) {
+                        f.startFloodFill(y, x);
+                        break;
+                    }
+                }
+            }
+            drawDungeon(grid, f.getDungeon());
+        });
+        
         Scene scene = new Scene(box, 1600, 800);
         stage.setScene(scene);
         stage.show();
@@ -127,10 +171,12 @@ public class GUI extends Application {
         g.getChildren().clear();
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
-                if (!d.cellIsFloor(y, x)) {
-                    g.add(new Rectangle(5,5), y, x);
+                if (d.cellIsFloor(y, x)) {
+                    g.add(new Rectangle(5, 5, Color.WHITE), y, x);
+                } else if (d.cellIsStone(y, x)) {
+                    g.add(new Rectangle(5, 5, Color.BLACK), y, x);
                 } else {
-                    g.add(new Rectangle(5,5,Color.WHITE), y, x);
+                    g.add(new Rectangle(5, 5, Color.LIGHTBLUE), y, x);
                 }
             }
         }

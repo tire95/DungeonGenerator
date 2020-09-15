@@ -42,21 +42,25 @@ public class Dungeon {
      * @param x the x coordinate of the given cell
      * @return the number of stone neighbors for the given cell
      */
-    public int checkNumberOfStoneNeighbors(int y, int x) {
+    public int checkNumberOfStoneNeighbors(int yCoord, int xCoord) {
         int neighbors = 0;
-        for (int i = y - 1; i <= y + 1; i++) {
-            for (int j = x - 1; j <= x + 1; j++) {
+        for (int i = yCoord - 1; i <= yCoord + 1; i++) {
+            for (int j = xCoord - 1; j <= xCoord + 1; j++) {
                 
                 // if a "cell" is outside the grid's bounds, count it as "stone"
                 if (i < 0 || i >= this.y || j < 0 || j >= this.x) {
                     neighbors++;
                     
-                } else if ((i != y) || (j != x)) {
+                } else if ((i != yCoord) || (j != xCoord)) {
                     neighbors += this.grid[i][j];
                 }
             }
         }
         return neighbors;
+    }
+    
+    private int checkNumberOfAdjacentStoneNeighbors(int yCoord, int xCoord) {
+        return this.grid[yCoord - 1][xCoord] + this.grid[yCoord + 1][xCoord] + this.grid[yCoord][xCoord + 1] + this.grid[yCoord][xCoord - 1];
     }
     
     public void changeCellToStone(int y, int x) {
@@ -71,12 +75,30 @@ public class Dungeon {
         return this.grid[y][x] == 0;
     }
     
-    public void setGrid(int[][] grid) {
-        this.grid = grid;
+    public boolean cellIsStone(int y, int x) {
+        return this.grid[y][x] == 1;
+    }
+    
+    public void setGrid(int[][] newGrid) {
+        this.grid = newGrid;
     }
     
     public int[][] getGrid() {
         return this.grid;
+    }
+    
+    public void cleanUp() {
+        for (int yCoord = 1; yCoord < this.y - 1; yCoord++) {
+            for (int xCoord = 1; xCoord < this.x - 1; xCoord++) {
+                if (!cellIsFloor(yCoord, xCoord)) {
+                    this.grid[yCoord][xCoord] = ((checkNumberOfAdjacentStoneNeighbors(yCoord,xCoord) >= 2 ? 1 : 0));
+                }
+            }
+        }
+    }
+    
+    public void setCell(int y, int x, int i) {
+        this.grid[y][x] = i;
     }
     
 }

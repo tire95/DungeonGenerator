@@ -56,7 +56,7 @@ public class CellularAutomaton {
         int dungeonY = this.dungeon.getY();
         int dungeonX = this.dungeon.getX();
         int[][] tempGrid = new int[dungeonY][dungeonX];
-        for (int i = 0; i <= this.iterations; i++) {
+        for (int i = 0; i < this.iterations; i++) {
             for (int y = 0; y < dungeonY; y++) {
                 for (int x = 0; x < dungeonX; x++) {
                     // if enough of neighboring cells are stone, change cell to stone, otherwise change cell to floor
@@ -64,7 +64,11 @@ public class CellularAutomaton {
                 }
             }
             this.dungeon.setGrid(tempGrid);
+            tempGrid = new int[dungeonY][dungeonX];
+
         }
+
+
     }
     
     public Dungeon getDungeon() {

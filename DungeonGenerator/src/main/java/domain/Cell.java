@@ -9,10 +9,10 @@ package domain;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * An entity used in random walk algorithm
+ * An entity used in random walk and flood fill algorithms
  * @author timot
  */
-public class Walker {
+public class Cell {
     private int currentX;
     private int currentY;
     private int previousX;
@@ -25,10 +25,15 @@ public class Walker {
      * @param y current y coordinate of the walker
      * @param turnChance chance of walker turning 90 degrees (percentage)
      */
-    public Walker(int y, int x, int turnChance) {
+    public Cell(int y, int x, int turnChance) {
         this.currentX = this.previousX = x;
         this.currentY = this.previousY = y;
         this.turnChance = turnChance;
+    }
+    
+    public Cell(int y, int x) {
+        this.currentX = this.previousX = x;
+        this.currentY = this.previousY = y;
     }
 
     public int getCurrentX() {

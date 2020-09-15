@@ -17,7 +17,7 @@ import org.junit.Test;
  * @author timot
  */
 public class TestWalker {
-    private Walker testWalker;
+    private Cell testWalker;
     
     
     public TestWalker() {
@@ -33,7 +33,7 @@ public class TestWalker {
 
     @Before
     public void setUp() {
-        testWalker = new Walker(5,5,10);
+        testWalker = new Cell(5,5,10);
     }
 
     @After
