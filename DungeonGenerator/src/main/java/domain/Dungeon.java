@@ -38,8 +38,8 @@ public class Dungeon {
     /**
      * Returns the number of neighboring cells with the state stone (i.e. 1).
      * For a cell at an edge/corner, every "cell" that's outside of the grid's bounds is counted as a stone cell; otherwise cellular automaton wouldn't work properly
-     * @param y the y coordinate of the given cell
-     * @param x the x coordinate of the given cell
+     * @param yCoord the y coordinate of the given cell
+     * @param xCoord the x coordinate of the given cell
      * @return the number of stone neighbors for the given cell
      */
     public int checkNumberOfStoneNeighbors(int yCoord, int xCoord) {
@@ -50,8 +50,7 @@ public class Dungeon {
                 // if a "cell" is outside the grid's bounds, count it as "stone"
                 if (i < 0 || i >= this.y || j < 0 || j >= this.x) {
                     neighbors++;
-                    
-                } else if ((i != yCoord) || (j != xCoord)) {
+                } else {
                     neighbors += this.grid[i][j];
                 }
             }
@@ -95,7 +94,7 @@ public class Dungeon {
         return this.grid;
     }
     
-     /**
+    /**
      * Cleans the dungeon by removing singular stone cells and stops once there's nothing to clean
      */
     public void cleanUp() {

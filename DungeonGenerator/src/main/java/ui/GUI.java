@@ -61,7 +61,7 @@ public class GUI extends Application {
     }
     
     private void automatonView(Stage stage) {
-        CellularAutomaton c = new CellularAutomaton(3, 200, 100, 55);
+        CellularAutomaton c = new CellularAutomaton(3, 200, 100, 45);
         c.initializeDungeon();
         FloodFill f = new FloodFill(2);
         VBox box = new VBox();
