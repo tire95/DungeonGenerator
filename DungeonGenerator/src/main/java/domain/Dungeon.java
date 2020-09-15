@@ -59,6 +59,14 @@ public class Dungeon {
         return neighbors;
     }
     
+    /**
+     * Returns the number of adjacent cells with the state stone (i.e. 1).
+     * Adjacent cells are the ones directly above, below, and to the sides.
+     * This method is used in dungeon clean up
+     * @param y the y coordinate of the given cell
+     * @param x the x coordinate of the given cell
+     * @return the number of adjacent stone neighbors for the given cell
+     */
     private int checkNumberOfAdjacentStoneNeighbors(int yCoord, int xCoord) {
         return this.grid[yCoord - 1][xCoord] + this.grid[yCoord + 1][xCoord] + this.grid[yCoord][xCoord + 1] + this.grid[yCoord][xCoord - 1];
     }
@@ -87,12 +95,27 @@ public class Dungeon {
         return this.grid;
     }
     
+     /**
+     * Cleans the dungeon by removing singular stone cells and stops once there's nothing to clean
+     */
     public void cleanUp() {
-        for (int yCoord = 1; yCoord < this.y - 1; yCoord++) {
-            for (int xCoord = 1; xCoord < this.x - 1; xCoord++) {
-                if (!cellIsFloor(yCoord, xCoord)) {
-                    this.grid[yCoord][xCoord] = ((checkNumberOfAdjacentStoneNeighbors(yCoord,xCoord) >= 2 ? 1 : 0));
+        boolean changed = false;
+        outerloop:
+        while (true) {
+            for (int yCoord = 1; yCoord < this.y - 1; yCoord++) {
+                for (int xCoord = 1; xCoord < this.x - 1; xCoord++) {
+                    if (cellIsStone(yCoord, xCoord)) {
+                        if (checkNumberOfAdjacentStoneNeighbors(yCoord,xCoord) < 2) {
+                            this.grid[yCoord][xCoord] = 0;
+                            changed = true;
+                        }
+                    }
                 }
+            }
+            if (changed) {
+                changed = false;
+            } else {
+                break outerloop;
             }
         }
     }

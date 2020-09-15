@@ -9,7 +9,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 /**
- *
+ * Flood fill algorithm
  * @author timot
  */
 public class FloodFill {
@@ -17,15 +17,21 @@ public class FloodFill {
     private Dungeon dungeon;
     private int replacement;
     
+    /**
+     * Constructor
+     * @param replacement integer to replace floor cells (i.e. with int=0)
+     */
     public FloodFill(int replacement) {
         this.cells = new ArrayDeque<Cell>();
         this.replacement = replacement;
     }
     
+    /**
+     * Starts the algorithm
+     * @param y Starting y coordinate
+     * @param x Starting x coordinate
+     */
     public void startFloodFill(int y, int x) {
-//        if (!this.dungeon.cellIsFloor(y, x)) {
-//            return;
-//        }
         this.dungeon.setCell(y, x, this.replacement);
         this.cells.add(new Cell(y, x));
 

@@ -20,7 +20,7 @@ public class Cell {
     private int turnChance;
     
     /**
-     *
+     * Constructor for complex random walk
      * @param x current x coordinate of the walker
      * @param y current y coordinate of the walker
      * @param turnChance chance of walker turning 90 degrees (percentage)
@@ -30,10 +30,15 @@ public class Cell {
         this.currentY = this.previousY = y;
         this.turnChance = turnChance;
     }
-    
+
+    /**
+     * Constructor for simple random walk and flood fill
+     * @param x current x coordinate of the walker
+     * @param y current y coordinate of the walker
+     */    
     public Cell(int y, int x) {
-        this.currentX = this.previousX = x;
-        this.currentY = this.previousY = y;
+        this.currentX = x;
+        this.currentY = y;
     }
 
     public int getCurrentX() {

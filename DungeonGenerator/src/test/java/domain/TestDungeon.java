@@ -54,7 +54,6 @@ public class TestDungeon {
         
         // check that a side cell has 3 "stone neighbors"
         assertEquals(3, testDungeon.checkNumberOfStoneNeighbors(0, 2));
-
     }
     
     @Test
@@ -66,10 +65,19 @@ public class TestDungeon {
     @Test
     public void testCellChangersAndChecker() {
         assertTrue(testDungeon.cellIsFloor(2, 2));
+        assertFalse(testDungeon.cellIsStone(2, 2));
         testDungeon.changeCellToStone(2, 2);
         assertFalse(testDungeon.cellIsFloor(2, 2));
+        assertTrue(testDungeon.cellIsStone(2, 2));
         testDungeon.changeCellToFloor(2, 2);
         assertTrue(testDungeon.cellIsFloor(2, 2));
+        assertFalse(testDungeon.cellIsStone(2, 2));
+        testDungeon.setCell(0, 0, 5);
+        assertFalse(testDungeon.cellIsFloor(0, 0));
+        assertFalse(testDungeon.cellIsStone(0, 0));
+        testDungeon.setCell(0, 0, 0);
+        assertTrue(testDungeon.cellIsFloor(0, 0));
+        assertFalse(testDungeon.cellIsStone(0, 0));
     }
     
     @Test
@@ -78,6 +86,26 @@ public class TestDungeon {
         newGrid[2][1] = 1;
         testDungeon.setGrid(newGrid);
         Assert.assertArrayEquals(newGrid, testDungeon.getGrid());
+    }
+    
+    @Test
+    public void testCleanUp() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                testDungeon.changeCellToStone(i, j);
+            }
+        }
+        testDungeon.changeCellToStone(8, 3);
+        
+        testDungeon.cleanUp();
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                assertTrue(testDungeon.cellIsStone(i, j));
+            }
+        }
+        
+        assertTrue(testDungeon.cellIsFloor(8, 3));
     }
     
 }

@@ -151,11 +151,12 @@ public class GUI extends Application {
         
         floodFill.setOnAction(e -> {
             f.setDungeon(w.getDungeon());
+            outerloop:
             for (int y = 0; y < 200; y++) {
                 for (int x = 0; x < 100; x++) {
                     if (f.getDungeon().cellIsFloor(y, x)) {
                         f.startFloodFill(y, x);
-                        break;
+                        break outerloop;
                     }
                 }
             }
