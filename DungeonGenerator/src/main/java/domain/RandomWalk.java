@@ -6,16 +6,15 @@
 
 package domain;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
+import util.CellQueue;
 
 /**
  * Dungeon generation algorithm
  * @author timot
  */
 public class RandomWalk {
-    private Queue<Cell> walkers;
+    private CellQueue walkers;
     private Dungeon dungeon;
     private int spawnChance;
     private int digPercent;
@@ -30,7 +29,7 @@ public class RandomWalk {
      * @param turnChance chance of walker turning 90 degrees (percentage)
      */
     public RandomWalk(int y, int x, int spawnChance, int digPercent, int turnChance) {
-        this.walkers = new ArrayDeque<Cell>();
+        this.walkers = new CellQueue(16);
         this.dungeon = new Dungeon(y, x);
         this.spawnChance = spawnChance;
         this.digPercent = digPercent;
@@ -46,10 +45,10 @@ public class RandomWalk {
         int dungeonY = this.dungeon.getY();
         int totalCells = dungeonX * dungeonY;
         int changedCells = 0;
-        this.walkers.add(new Cell(dungeonY / 2, dungeonX / 2, turnChance));
+        this.walkers.enqueue(new Cell(dungeonY / 2, dungeonX / 2, turnChance));
         
         while ((100 * changedCells / totalCells) < this.digPercent) {
-            Cell nextWalker = this.walkers.poll();
+            Cell nextWalker = this.walkers.dequeue();
             nextWalker.simpleWalk();
 //            nextWalker.walk();
             int currentX = nextWalker.getCurrentX();
@@ -64,22 +63,26 @@ public class RandomWalk {
                 
                 // if the walker has stone cells next to it or otherwise the queue is empty, keep the walker alive
                 if ((this.dungeon.checkNumberOfStoneNeighbors(currentY, currentX) > 0) || this.walkers.isEmpty()) {
-                    this.walkers.add(nextWalker);
+                    this.walkers.enqueue(nextWalker);
                     
                     // randomly spawn a new walker where the current walker is
                     if (ThreadLocalRandom.current().nextInt(1, 101) < this.spawnChance) {
-                        this.walkers.add(new Cell(currentY, currentX, turnChance));
+                        this.walkers.enqueue(new Cell(currentY, currentX, turnChance));
                     }
                 }
             }
             
             // if the last walker walked out of the dungeon, spawn a new walker
             if (this.walkers.isEmpty()) {
-                this.walkers.add(new Cell(dungeonY / 2, dungeonX / 2, turnChance));
+                this.walkers.enqueue(new Cell(dungeonY / 2, dungeonX / 2, turnChance));
             }
         }
     }
     
+    /**
+     * Returns dungeon
+     * @return dungeon
+     */
     public Dungeon getDungeon() {
         return this.dungeon;
     }
@@ -88,7 +91,7 @@ public class RandomWalk {
      * Initializes the dungeon by changing cells to stone and emptying the queue in case some walkers remain after last run
      */
     public void initDungeon() {
-        this.walkers.clear();
+        this.walkers = new CellQueue(16);
         for (int y = 0; y < this.dungeon.getY(); y++) {
             for (int x = 0; x < this.dungeon.getX(); x++) {
                 this.dungeon.changeCellToStone(y, x);
@@ -96,7 +99,11 @@ public class RandomWalk {
         }
     }
     
-    public Queue<Cell> getWalkers() {
+    /**
+     * Returns queue of walkers
+     * @return walkers
+     */
+    public CellQueue getWalkers() {
         return this.walkers;
     }
     

@@ -27,10 +27,18 @@ public class Dungeon {
         this.grid = new int[y][x];
     }
     
+    /**
+     * Return x i.e. width of dungeon
+     * @return x
+     */
     public int getX() {
         return this.x;
     }
     
+    /**
+     * Return y i.e. height of dungeon
+     * @return y
+     */
     public int getY() {
         return this.y;
     }
@@ -70,26 +78,56 @@ public class Dungeon {
         return this.grid[yCoord - 1][xCoord] + this.grid[yCoord + 1][xCoord] + this.grid[yCoord][xCoord + 1] + this.grid[yCoord][xCoord - 1];
     }
     
+    /**
+     * Change cell's state to stone i.e. 1
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     */
     public void changeCellToStone(int y, int x) {
         this.grid[y][x] = 1;
     }
     
+    /**
+     * Change cell's state to floor i.e. 0
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     */
     public void changeCellToFloor(int y, int x) {
         this.grid[y][x] = 0;
     }
     
+    /**
+     * Checks if given cell is floor
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     * @return true if cell is floor
+     */
     public boolean cellIsFloor(int y, int x) {
         return this.grid[y][x] == 0;
     }
     
+    /**
+     * Checks if given cell is stone
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     * @return true if cell is stone
+     */
     public boolean cellIsStone(int y, int x) {
         return this.grid[y][x] == 1;
     }
     
+    /**
+     * Sets dungeon grid to new grid
+     * @param newGrid new grid for dungeon
+     */
     public void setGrid(int[][] newGrid) {
         this.grid = newGrid;
     }
     
+    /**
+     * Returns dungeon grid
+     * @return grid
+     */
     public int[][] getGrid() {
         return this.grid;
     }
@@ -119,6 +157,12 @@ public class Dungeon {
         }
     }
     
+    /**
+     * Sets cell's state to given integer i
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     * @param i the new state of cell
+     */
     public void setCell(int y, int x, int i) {
         this.grid[y][x] = i;
     }

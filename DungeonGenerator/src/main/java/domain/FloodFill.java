@@ -6,15 +6,15 @@
 
 package domain;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import util.CellQueue;
+
 
 /**
  * Flood fill algorithm
  * @author timot
  */
 public class FloodFill {
-    private Queue<Cell> cells;
+    private CellQueue cells;
     private Dungeon dungeon;
     private int replacement;
     
@@ -23,7 +23,7 @@ public class FloodFill {
      * @param replacement integer to replace floor cells (i.e. with int=0)
      */
     public FloodFill(int replacement) {
-        this.cells = new ArrayDeque<Cell>();
+        this.cells = new CellQueue(16);
         this.replacement = replacement;
     }
     
@@ -34,37 +34,45 @@ public class FloodFill {
      */
     public void startFloodFill(int y, int x) {
         this.dungeon.setCell(y, x, this.replacement);
-        this.cells.add(new Cell(y, x));
+        this.cells.enqueue(new Cell(y, x));
 
-        while(!this.cells.isEmpty()) {
-            Cell currentCell = this.cells.poll();
+        while (!this.cells.isEmpty()) {
+            Cell currentCell = this.cells.dequeue();
             if (currentCell.getCurrentX() - 1 >= 0 && this.dungeon.cellIsFloor(currentCell.getCurrentY(), currentCell.getCurrentX() - 1)) {
                 this.dungeon.setCell(currentCell.getCurrentY(), currentCell.getCurrentX() - 1, this.replacement);
-                this.cells.add(new Cell(currentCell.getCurrentY(), currentCell.getCurrentX() - 1));
+                this.cells.enqueue(new Cell(currentCell.getCurrentY(), currentCell.getCurrentX() - 1));
             }
 
             if ((currentCell.getCurrentX() + 1 < this.dungeon.getX()) && this.dungeon.cellIsFloor(currentCell.getCurrentY(), currentCell.getCurrentX() + 1)) {
                 this.dungeon.setCell(currentCell.getCurrentY(), currentCell.getCurrentX() + 1, this.replacement);
-                this.cells.add(new Cell(currentCell.getCurrentY(), currentCell.getCurrentX() + 1));
+                this.cells.enqueue(new Cell(currentCell.getCurrentY(), currentCell.getCurrentX() + 1));
             }
 
             if ((currentCell.getCurrentY() - 1 >= 0) && this.dungeon.cellIsFloor(currentCell.getCurrentY() - 1, currentCell.getCurrentX())) {
                 this.dungeon.setCell(currentCell.getCurrentY() - 1, currentCell.getCurrentX(), this.replacement);
-                this.cells.add(new Cell(currentCell.getCurrentY() - 1, currentCell.getCurrentX()));
+                this.cells.enqueue(new Cell(currentCell.getCurrentY() - 1, currentCell.getCurrentX()));
             }
 
             if ((currentCell.getCurrentY() + 1 < this.dungeon.getY()) && this.dungeon.cellIsFloor(currentCell.getCurrentY() + 1, currentCell.getCurrentX())) {
                 this.dungeon.setCell(currentCell.getCurrentY() + 1, currentCell.getCurrentX(), this.replacement);
-                this.cells.add(new Cell(currentCell.getCurrentY() + 1, currentCell.getCurrentX()));
+                this.cells.enqueue(new Cell(currentCell.getCurrentY() + 1, currentCell.getCurrentX()));
             }
 
         }
     }
     
+    /**
+     * Sets algorithms dungeon
+     * @param dungeon dungeon
+     */
     public void setDungeon(Dungeon dungeon) {
         this.dungeon = dungeon;
     }
     
+    /**
+     * Return dungeon
+     * @return dungeon
+     */
     public Dungeon getDungeon() {
         return this.dungeon;
     }

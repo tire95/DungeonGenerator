@@ -41,10 +41,18 @@ public class Cell {
         this.currentY = y;
     }
 
+    /**
+     * Return current x coordinate
+     * @return x coordinate
+     */
     public int getCurrentX() {
         return currentX;
     }
 
+    /**
+     * Return current y coordinate
+     * @return y coordinate
+     */
     public int getCurrentY() {
         return currentY;
     }

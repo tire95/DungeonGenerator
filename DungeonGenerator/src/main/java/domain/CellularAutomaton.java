@@ -71,14 +71,26 @@ public class CellularAutomaton {
 
     }
     
+    /**
+     * Return dungeon
+     * @return dungeon
+     */
     public Dungeon getDungeon() {
         return this.dungeon;
     }
     
+    /**
+     * Return automaton's iterations
+     * @return iterations
+     */
     public int getIterations() {
         return this.iterations;
     }
     
+    /**
+     * Return stone percent at start
+     * @return stone percent at start
+     */
     public int getStonePercent() {
         return this.stonePercentAtStart;
     }
