@@ -10,4 +10,4 @@
 
 Test coverage, checkstyle and JavaDoc have been configured and can be run once the project is downloaded.
 
-![test coverage](/Documentation/Pictures/jacoco.png)
+![test coverage](/Documentation/Pictures/jacoco.PNG)
