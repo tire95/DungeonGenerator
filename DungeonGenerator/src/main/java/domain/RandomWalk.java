@@ -19,6 +19,7 @@ public class RandomWalk {
     private int spawnChance;
     private int digPercent;
     private int turnChance;
+    private boolean useComplexWalk;
     
     /**
      * Constructor
@@ -28,12 +29,13 @@ public class RandomWalk {
      * @param digPercent percentage of stone to be digged
      * @param turnChance chance of walker turning 90 degrees (percentage)
      */
-    public RandomWalk(int y, int x, int spawnChance, int digPercent, int turnChance) {
+    public RandomWalk(int y, int x, int spawnChance, int digPercent, int turnChance, boolean complexWalk) {
         this.walkers = new CellQueue(16);
         this.dungeon = new Dungeon(y, x);
         this.spawnChance = spawnChance;
         this.digPercent = digPercent;
         this.turnChance = turnChance;
+        this.useComplexWalk = complexWalk;
         initDungeon();
     }
     
@@ -49,8 +51,11 @@ public class RandomWalk {
         
         while ((100 * changedCells / totalCells) < this.digPercent) {
             Cell nextWalker = this.walkers.dequeue();
-            nextWalker.simpleWalk();
-//            nextWalker.walk();
+            if (this.useComplexWalk) {
+                nextWalker.walk();
+            } else {
+                nextWalker.simpleWalk();
+            }
             int currentX = nextWalker.getCurrentX();
             int currentY = nextWalker.getCurrentY();
             

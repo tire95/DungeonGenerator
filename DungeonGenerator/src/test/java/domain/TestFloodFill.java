@@ -34,7 +34,7 @@ public class TestFloodFill {
 
     @Before
     public void setUp() {
-        testFloodFill = new FloodFill(2);
+        testFloodFill = new FloodFill();
         testFloodFill.setDungeon(new Dungeon(10, 10));
     }
 
@@ -47,7 +47,7 @@ public class TestFloodFill {
         for (int i = 0; i < 10; i++) {
             testFloodFill.getDungeon().changeCellToStone(1, i);
         }
-        testFloodFill.startFloodFill(0, 0);
+        testFloodFill.startFloodFill(0, 0, 0, 2);
         for (int i = 0; i < 10; i++) {
             assertFalse(testFloodFill.getDungeon().cellIsFloor(0, i));
             assertFalse(testFloodFill.getDungeon().cellIsStone(0, i));
@@ -63,7 +63,7 @@ public class TestFloodFill {
         for (int i = 0; i < 10; i++) {
             testFloodFill.getDungeon().changeCellToStone(i, i);
         }
-        testFloodFill.startFloodFill(1, 0);
+        testFloodFill.startFloodFill(1, 0, 0, 2);
         
         for (int i = 0; i < 10; i++) {
             assertTrue(testFloodFill.getDungeon().cellIsStone(i, i));
@@ -89,7 +89,7 @@ public class TestFloodFill {
         for (int i = 0; i < 10; i++) {
             testFloodFill.getDungeon().changeCellToStone(i, i);
         }
-        testFloodFill.startFloodFill(5, 4);
+        testFloodFill.startFloodFill(5, 4, 0, 2);
         
         for (int i = 0; i < 10; i++) {
             assertTrue(testFloodFill.getDungeon().cellIsStone(i, i));

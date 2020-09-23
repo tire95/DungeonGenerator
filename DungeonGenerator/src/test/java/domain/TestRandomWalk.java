@@ -38,9 +38,9 @@ public class TestRandomWalk {
     @Before
     public void setUp() {
         digPercent = 30;
-        testRandomWalk = new RandomWalk(10, 10, 10, digPercent, 50);
-        testRandomWalk2 = new RandomWalk(50, 100, 30, digPercent/2, 50);
-        testRandomWalk3 = new RandomWalk(3, 20, 1, digPercent*2, 50);
+        testRandomWalk = new RandomWalk(10, 10, 10, digPercent, 50, false);
+        testRandomWalk2 = new RandomWalk(50, 100, 30, digPercent/2, 50, false);
+        testRandomWalk3 = new RandomWalk(3, 20, 1, digPercent*2, 50, false);
     }
 
     @After
