@@ -47,9 +47,9 @@ jacocoTestReport {
         html.enabled = true
     }
     afterEvaluate {
-        getClassDirectories().setFrom(classDirectories.files.collect {
+        classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                exclude: ['**/ui/**'])
+                    exclude: ['**/ui/**'])
         })
     }
 }
