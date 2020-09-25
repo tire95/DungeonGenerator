@@ -9,7 +9,7 @@ package domain;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * An entity used in random walk and flood fill algorithms
+ * An entity used in random complexWalk and flood fill algorithms
  * @author timot
  */
 public class Cell {
@@ -20,7 +20,7 @@ public class Cell {
     private int turnChance;
     
     /**
-     * Constructor for complex random walk
+     * Constructor for complex random complexWalk
      * @param x current x coordinate of the walker
      * @param y current y coordinate of the walker
      * @param turnChance chance of walker turning 90 degrees (percentage)
@@ -32,7 +32,7 @@ public class Cell {
     }
 
     /**
-     * Constructor for simple random walk and flood fill
+     * Constructor for simple random complexWalk and flood fill
      * @param x current x coordinate of the walker
      * @param y current y coordinate of the walker
      */    
@@ -79,9 +79,9 @@ public class Cell {
     }
     
     /**
-     * A walk algorithm that depends on the turn chance
+     * A complexWalk algorithm that depends on the turn chance
      */
-    public void walk() {
+    public void complexWalk() {
         boolean moveInPositive;
         
         // check whether to turn or not

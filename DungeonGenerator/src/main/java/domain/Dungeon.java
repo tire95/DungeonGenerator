@@ -180,6 +180,12 @@ public class Dungeon {
         this.grid[y][x] = i;
     }
     
+    /**
+     * Return cell's state
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     * @return
+     */
     public int getCell(int y, int x) {
         return this.grid[y][x];
     }

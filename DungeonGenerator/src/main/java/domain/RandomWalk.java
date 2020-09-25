@@ -28,6 +28,7 @@ public class RandomWalk {
      * @param spawnChance chance of spawning a new walker (percentage)
      * @param digPercent percentage of stone to be digged
      * @param turnChance chance of walker turning 90 degrees (percentage)
+     * @param complexWalk true if complexWalk is used, false is simpleWalk is used
      */
     public RandomWalk(int y, int x, int spawnChance, int digPercent, int turnChance, boolean complexWalk) {
         this.walkers = new CellQueue(16);
@@ -52,7 +53,7 @@ public class RandomWalk {
         while ((100 * changedCells / totalCells) < this.digPercent) {
             Cell nextWalker = this.walkers.dequeue();
             if (this.useComplexWalk) {
-                nextWalker.walk();
+                nextWalker.complexWalk();
             } else {
                 nextWalker.simpleWalk();
             }
@@ -61,7 +62,7 @@ public class RandomWalk {
             
             // check if the walker is still in dungeon
             if (currentX < dungeonX && currentX >= 0 && currentY < dungeonY && currentY >= 0) {
-                if (!this.dungeon.cellIsFloor(currentY, currentX)) {
+                if (this.dungeon.cellIsStone(currentY, currentX)) {
                     this.dungeon.changeCellToFloor(currentY, currentX);
                     changedCells++;
                 }
@@ -95,21 +96,13 @@ public class RandomWalk {
     /**
      * Initializes the dungeon by changing cells to stone and emptying the queue in case some walkers remain after last run
      */
-    public void initDungeon() {
+    private void initDungeon() {
         this.walkers = new CellQueue(16);
         for (int y = 0; y < this.dungeon.getY(); y++) {
             for (int x = 0; x < this.dungeon.getX(); x++) {
                 this.dungeon.changeCellToStone(y, x);
             }
         }
-    }
-    
-    /**
-     * Returns queue of walkers
-     * @return walkers
-     */
-    public CellQueue getWalkers() {
-        return this.walkers;
     }
     
 }

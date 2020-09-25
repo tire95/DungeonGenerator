@@ -20,6 +20,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
@@ -29,7 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- *
+ * Graphical user interface
  * @author timot
  */
 public class GUI extends Application {
@@ -39,13 +40,16 @@ public class GUI extends Application {
     private double resolutionX;
     private double resolutionY;
     
+    /**
+     * Main method for launching JavaFX GUI
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
     
     @Override
     public void start(Stage stage) {        
-        this.fill = new FloodFill();
         stage.setTitle("Dungeon generator");
         
         HBox hbox = new HBox();
@@ -78,7 +82,6 @@ public class GUI extends Application {
     }
     
     private void automatonView(Stage stage) {
-        
         Label widthLabel = new Label("Dungeon width");
         Spinner widthSpinner = new Spinner((int) 10, (int) 100000, (int) 100);
         Label heightLabel = new Label("Dungeon height");
@@ -125,8 +128,7 @@ public class GUI extends Application {
         
         resetAutomaton.setOnAction(e -> {
             this.automaton.reset();
-            this.automaton.initializeDungeon();
-            drawDungeon(gc, this.automaton.getDungeon());
+            automatonView(stage);
         });
                 
         cleanUp.setOnAction(e -> {
@@ -135,7 +137,7 @@ public class GUI extends Application {
         });
         
         floodFill.setOnAction(e -> {
-            this.fill.setDungeon(this.automaton.getDungeon());
+            this.fill = new FloodFill(this.automaton.getDungeon());
             this.fill.findLargestConnectedArea();
             drawDungeon(gc, this.fill.getDungeon());
         });
@@ -195,8 +197,7 @@ public class GUI extends Application {
         });
         
         resetRandom.setOnAction(e -> {
-            this.walk.initDungeon();
-            drawDungeon(gc, this.walk.getDungeon());
+            walkView(stage);
         });
         
         cleanUp.setOnAction(e -> {
@@ -205,7 +206,7 @@ public class GUI extends Application {
         });
         
         floodFill.setOnAction(e -> {
-            this.fill.setDungeon(this.walk.getDungeon());
+            this.fill = new FloodFill(this.walk.getDungeon());
             this.fill.findLargestConnectedArea();
             drawDungeon(gc, this.fill.getDungeon());
         });
@@ -216,40 +217,57 @@ public class GUI extends Application {
     }
     
     private void performanceTestView(Stage stage) {
+        Label averageLabel = new Label("How many runs to average");
+        Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
+        Label maximumLabel = new Label("Dungeon's maximum height and width (note that value 10 means that dungeon will be 10*10=100 cells");
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(10, 100, 1000));
+        Button beginButton = new Button("Begin performance test");
+        
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(10));
+        
+        
+        box.getChildren().addAll(averageLabel, averageSpinner, maximumLabel, cb, beginButton);
         ListView<String> listView = new ListView<String>();
         ObservableList<String> results = FXCollections.observableArrayList();
-        int i = 1;
-        while (i < 1000) {
-            i *= 10;
-            long automatonTime = 0;
-            long walkTimeSimple = 0;
-            long startTime = 0;
-            long endTime = 0;
-            for (int j = 0; j < 100; j++) {
-                this.automaton = new CellularAutomaton(4, i, i, 50);
-                startTime = System.nanoTime();
-                this.automaton.initializeDungeon();
-                this.automaton.runAutomaton();
-                endTime = System.nanoTime();
-                automatonTime += (endTime - startTime);
-                this.walk = new RandomWalk(i, i, 4, 50, 0, false);
-                startTime = System.nanoTime();
-                this.walk.runRandomWalk();
-                endTime = System.nanoTime();
-                walkTimeSimple += (endTime - startTime);
-            }
-            results.add("Cellular automaton with dimension: " + i*i + ", average time: " + automatonTime/100);
-            results.add("Simple random walk with dimension: " + i*i + ", average time: " + walkTimeSimple/100);
-        }
-        listView.setItems(results);
         Button restart = new Button("Restart performance test");
+        
+        beginButton.setOnAction(e -> {
+            int average = (int) averageSpinner.getValue();
+            int maximum = (int) cb.getValue();
+            int i = 1;
+            while (i < maximum) {
+                i *= 10;
+                long automatonTime = 0;
+                long walkTimeSimple = 0;
+                long startTime = 0;
+                long endTime = 0;
+                for (int j = 0; j < average; j++) {
+                    this.automaton = new CellularAutomaton(4, i, i, 50);
+                    startTime = System.nanoTime();
+                    this.automaton.initializeDungeon();
+                    this.automaton.runAutomaton();
+                    endTime = System.nanoTime();
+                    automatonTime += (endTime - startTime);
+                    this.walk = new RandomWalk(i, i, 4, 50, 0, false);
+                    startTime = System.nanoTime();
+                    this.walk.runRandomWalk();
+                    endTime = System.nanoTime();
+                    walkTimeSimple += (endTime - startTime);
+                }
+                results.add("Cellular automaton with dimension: " + i*i + ", average time: " + automatonTime/average);
+                results.add("Simple random walk with dimension: " + i*i + ", average time: " + walkTimeSimple/average);
+            }
+            listView.setItems(results);
+            box.getChildren().clear();
+            box.getChildren().addAll(listView, restart);
+        });
         
         restart.setOnAction(e -> {
             performanceTestView(stage);
         });
         
-        VBox box = new VBox();
-        box.getChildren().addAll(listView, restart);
         Scene scene = new Scene(box, 1600, 800);
         stage.setScene(scene);
         stage.show();
@@ -260,7 +278,7 @@ public class GUI extends Application {
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (d.cellIsFloor(y, x)) {
-                    gc.fillRect(y*this.resolutionY, x*this.resolutionX, this.resolutionY, this.resolutionX);
+                    gc.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
@@ -268,7 +286,7 @@ public class GUI extends Application {
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (d.cellIsStone(y, x)) {
-                    gc.fillRect(y*this.resolutionY, x*this.resolutionX, this.resolutionY, this.resolutionX);
+                    gc.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
@@ -277,7 +295,7 @@ public class GUI extends Application {
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (!d.cellIsStone(y, x) && !d.cellIsFloor(y, x)) {
-                    gc.fillRect(y*this.resolutionY, x*this.resolutionX, this.resolutionY, this.resolutionX);
+                    gc.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
