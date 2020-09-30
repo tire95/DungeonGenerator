@@ -10,6 +10,7 @@ import domain.CellularAutomaton;
 import domain.Dungeon;
 import domain.FloodFill;
 import domain.RandomWalk;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -57,8 +58,7 @@ public class GUI extends Application {
         hbox.setAlignment(Pos.CENTER);
         Button cellular = new Button("Cellular automaton");
         Button walk = new Button("Random walk");
-        Button performanceTest = new Button("Performance testing");
-        
+        Button performanceTest = new Button("Performance testing");        
                 
         cellular.setOnAction(e -> {
             automatonView(stage);
@@ -72,9 +72,8 @@ public class GUI extends Application {
             performanceTestView(stage);
         });
         
-        hbox.getChildren().addAll(cellular, walk, performanceTest);
-
         
+        hbox.getChildren().addAll(cellular, walk, performanceTest);
 
         Scene scene = new Scene(hbox, 1600, 800);
         stage.setScene(scene);
@@ -228,6 +227,27 @@ public class GUI extends Application {
     }
     
     private void performanceTestView(Stage stage) {
+        Button generationTest = new Button("Dungeon generation performance tests");
+        Button fillTest = new Button("Flood fill performance tests");
+        HBox box = new HBox();
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(10));
+        box.getChildren().addAll(generationTest, fillTest);
+        
+        generationTest.setOnAction(e -> {
+            generationTestView(stage);
+        });
+        
+        fillTest.setOnAction(e -> {
+            fillTestView(stage);
+        });
+        
+        Scene scene = new Scene(box, 1600, 800);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    private void generationTestView(Stage stage) {
         Label averageLabel = new Label("How many runs to average");
         Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
         Label maximumLabel = new Label("Dungeon's maximum height and width (note that value 10 means that dungeon will be 10*10=100 cells");
@@ -270,6 +290,95 @@ public class GUI extends Application {
                 results.add("Cellular automaton with dimension: " + i*i + ", average time: " + automatonTime/average);
                 results.add("Simple random walk with dimension: " + i*i + ", average time: " + walkTimeSimple/average);
             }
+            listView.setItems(results);
+            box.getChildren().clear();
+            box.getChildren().addAll(listView, restart);
+        });
+        
+        restart.setOnAction(e -> {
+            performanceTestView(stage);
+        });
+        
+        Scene scene = new Scene(box, 1600, 800);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    private void fillTestView(Stage stage) {
+        ArrayList<Dungeon> dungeons = new ArrayList<>();
+        Dungeon dungeon1 = new Dungeon(10, 10);
+        for (int i = 0; i < 10; i++) {
+            dungeon1.changeCellToStone(1, i);
+        }
+        dungeons.add(dungeon1);
+        
+        Dungeon dungeon2 = new Dungeon(16, 16);
+        for (int i = 0; i < 16; i ++) {
+            dungeon2.changeCellToStone(3, i);
+            dungeon2.changeCellToStone(6, i);
+            dungeon2.changeCellToStone(i, 10);
+        }
+        dungeons.add(dungeon2);
+        
+        Dungeon dungeon3 = new Dungeon(100, 150);
+        for (int i = 0; i < 30; i++) {
+            dungeon3.changeCellToStone(10, i);
+            dungeon3.changeCellToStone(90, 149-i);
+        }
+        for (int i = 0; i < 10; i++) {
+            dungeon3.changeCellToStone(i, 29);
+            dungeon3.changeCellToStone(99-i, 120);
+        }
+        dungeons.add(dungeon3);
+        
+        Dungeon dungeon4 = new Dungeon(500, 500);
+        for(int i = 0; i < 360; i++) {
+            int x1 = (int) (100 * Math.cos(i * Math.PI / 180));
+            int y1 = (int) (100 * Math.sin(i * Math.PI / 180));
+            dungeon4.changeCellToStone(250 + y1, 250 + x1);
+        }
+        dungeons.add(dungeon4);
+
+        
+        Label averageLabel = new Label("How many runs to average");
+        Spinner averageSpinner = new Spinner((int) 1, (int) 1000, (int) 100);
+        Button beginButton = new Button("Begin performance test");
+        
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(10));
+        
+        
+        box.getChildren().addAll(averageLabel, averageSpinner, beginButton);
+        ListView<String> listView = new ListView<String>();
+        ObservableList<String> results = FXCollections.observableArrayList();
+        Button restart = new Button("Restart performance test");
+        
+        beginButton.setOnAction(e -> {
+            int average = (int) averageSpinner.getValue();
+            for (Dungeon d : dungeons) {
+                int i = 1;
+                long forestFireTime = 0;
+                long scanFillTime = 0;
+                long startTime = 0;
+                long endTime = 0;
+                for (int j = 0; j < average; j++) {
+                    FloodFill forestFire = new FloodFill(d, 0);
+                    startTime = System.nanoTime();
+                    forestFire.findLargestConnectedArea();
+                    endTime = System.nanoTime();
+                    forestFireTime += (endTime - startTime);
+                    FloodFill scanFill = new FloodFill(d, 1);
+                    startTime = System.nanoTime();
+                    scanFill.findLargestConnectedArea();
+                    endTime = System.nanoTime();
+                    scanFillTime += (endTime - startTime);
+                }
+                results.add("Forest fire for dungeon " + i + ", average time: " + forestFireTime/average);
+                results.add("Scan fill for dungeon " + i + ", average time: " + scanFillTime/average);
+                i++;
+            }
+
             listView.setItems(results);
             box.getChildren().clear();
             box.getChildren().addAll(listView, restart);
