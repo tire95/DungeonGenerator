@@ -39,6 +39,7 @@ public class GUI extends Application {
     private FloodFill fill;
     private double resolutionX;
     private double resolutionY;
+    private int floodFillChoice;
     
     /**
      * Main method for launching JavaFX GUI
@@ -90,6 +91,9 @@ public class GUI extends Application {
         Spinner iterationSpinner = new Spinner((int) 1, (int) 10, (int) 4);
         Label stoneLabel = new Label("Stone percent at start");
         Spinner stonePercentSpinner = new Spinner((int) 1, (int) 100, (int) 45);
+        Label floodFillChoiceLabel = new Label("Choose flood fill algorithm");
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList("Forest fire", "Scan fill"));
+        cb.setValue("Forest fire");
         
         Button createAutomaton = new Button("Create a cellular automaton");
         
@@ -105,7 +109,7 @@ public class GUI extends Application {
         Canvas canvas = new Canvas(500, 500);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
-        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, iterationLabel, iterationSpinner, stoneLabel, stonePercentSpinner, createAutomaton);
+        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, iterationLabel, iterationSpinner, stoneLabel, stonePercentSpinner, floodFillChoiceLabel, cb, createAutomaton);
         
         createAutomaton.setOnAction(e -> {
             int iterations = (int) iterationSpinner.getValue();
@@ -114,6 +118,8 @@ public class GUI extends Application {
             this.resolutionY = 500/height;
             this.resolutionX = 500/width;
             int stonePercent = (int) stonePercentSpinner.getValue();
+            String choice = (String) cb.getValue();
+            floodFillChoice = choice.equals("Forest fire") ? 0 : 1;
             this.automaton = new CellularAutomaton(iterations, height, width, stonePercent);
             this.automaton.initializeDungeon();
             drawDungeon(gc, this.automaton.getDungeon());
@@ -137,7 +143,7 @@ public class GUI extends Application {
         });
         
         floodFill.setOnAction(e -> {
-            this.fill = new FloodFill(this.automaton.getDungeon());
+            this.fill = new FloodFill(this.automaton.getDungeon(), this.floodFillChoice);
             this.fill.findLargestConnectedArea();
             drawDungeon(gc, this.fill.getDungeon());
         });
@@ -160,6 +166,9 @@ public class GUI extends Application {
         Label turnLabel = new Label("Percent chance of a walker turning");
         Spinner turnSpinner = new Spinner((int) 1, (int) 100, (int) 70);
         CheckBox complexBox = new CheckBox("Check if you want to use complex walk, i.e. change turn chance");
+        Label floodFillChoiceLabel = new Label("Choose flood fill algorithm");
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList("Forest fire", "Scan fill"));
+        cb.setValue("Forest fire");
         
         Button createWalk = new Button("Create a random walk");
         
@@ -174,7 +183,7 @@ public class GUI extends Application {
         Canvas canvas = new Canvas(500, 500);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
-        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, spawnLabel, spawnSpinner, digLabel, digSpinner, turnLabel, turnSpinner, complexBox, createWalk);
+        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, spawnLabel, spawnSpinner, digLabel, digSpinner, turnLabel, turnSpinner, complexBox, floodFillChoiceLabel, cb, createWalk);
         
         createWalk.setOnAction(e -> {
             int width = (int) widthSpinner.getValue();
@@ -185,6 +194,8 @@ public class GUI extends Application {
             int digPercent = (int) digSpinner.getValue();
             int turnChance = (int) turnSpinner.getValue();
             boolean complex = complexBox.isSelected();
+            String choice = (String) cb.getValue();
+            floodFillChoice = choice.equals("Forest fire") ? 0 : 1;
             this.walk = new RandomWalk(height, width, spawnChance, digPercent, turnChance, complex);
             drawDungeon(gc, this.walk.getDungeon());
             box.getChildren().clear();
@@ -206,7 +217,7 @@ public class GUI extends Application {
         });
         
         floodFill.setOnAction(e -> {
-            this.fill = new FloodFill(this.walk.getDungeon());
+            this.fill = new FloodFill(this.walk.getDungeon(), this.floodFillChoice);
             this.fill.findLargestConnectedArea();
             drawDungeon(gc, this.fill.getDungeon());
         });
