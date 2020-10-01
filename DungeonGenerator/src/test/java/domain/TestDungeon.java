@@ -106,6 +106,27 @@ public class TestDungeon {
         }
         
         assertTrue(testDungeon.cellIsFloor(8, 3));
+        
+        testDungeon.setGrid(new int[20][10]);
+        for (int i = 8; i < 12; i++) {
+            for (int j = 5; j < 7; j++) {
+                testDungeon.changeCellToStone(i, j);
+            }
+        }
+        
+        testDungeon.changeCellToStone(3, 3);
+        
+        testDungeon.cleanUp();
+        
+        for (int i = 8; i < 12; i++) {
+            for (int j = 5; j < 7; j++) {
+                assertTrue(testDungeon.cellIsStone(i, j));
+            }
+        }
+        
+        assertTrue(testDungeon.cellIsFloor(3, 3));
+        
+        
     }
     
 }

@@ -6,7 +6,7 @@
 
 package domain;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Dungeon generation algorithm
@@ -34,14 +34,13 @@ public class CellularAutomaton {
      * Initializes dungeon by changing random cells to stone until a wanted stone percent is achieved
      */
     public void initializeDungeon() {
-        Random rand = new Random();
         int changedCells = 0;
         int dungeonHeigth = this.dungeon.getY();
         int dungeonWidth = this.dungeon.getX();
         int totalCells = dungeonWidth * dungeonHeigth;
         while (100 * changedCells / totalCells < this.stonePercentAtStart) {
-            int cellX = rand.nextInt(dungeonWidth);
-            int cellY = rand.nextInt(dungeonHeigth);
+            int cellX = ThreadLocalRandom.current().nextInt(0, dungeonWidth);
+            int cellY = ThreadLocalRandom.current().nextInt(0, dungeonHeigth);
             if (this.dungeon.cellIsFloor(cellY, cellX)) {
                 this.dungeon.changeCellToStone(cellY, cellX);
                 changedCells++;

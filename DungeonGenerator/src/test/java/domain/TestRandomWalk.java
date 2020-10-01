@@ -23,6 +23,7 @@ public class TestRandomWalk {
     private RandomWalk testRandomWalk2;
     private RandomWalk testRandomWalk3;
     private RandomWalk testRandomWalk4;
+    private RandomWalk testRandomWalk5;
     
     public TestRandomWalk() {
     }
@@ -42,6 +43,7 @@ public class TestRandomWalk {
         testRandomWalk2 = new RandomWalk(50, 100, 30, digPercent/2, 50, false);
         testRandomWalk3 = new RandomWalk(3, 20, 1, digPercent*2, 50, false);
         testRandomWalk4 = new RandomWalk(20, 45, 0, digPercent, 50, true);
+        testRandomWalk5 = new RandomWalk(100, 300, 5, digPercent/2, 33, true);
     }
 
     @After
@@ -101,6 +103,19 @@ public class TestRandomWalk {
             }
         }
         assertTrue(digPercent <= (100*dugCells/(dungeonX*dungeonY)));
+        
+        testRandomWalk5.runRandomWalk();
+        dugCells = 0;
+        dungeonX = testRandomWalk5.getDungeon().getX();
+        dungeonY = testRandomWalk5.getDungeon().getY();
+        for (int y = 0; y < dungeonY; y++) {
+            for (int x = 0; x < dungeonX; x++) {
+                if (testRandomWalk5.getDungeon().cellIsFloor(y, x)) {
+                    dugCells++;
+                }
+            }
+        }
+        assertTrue(digPercent/2 <= (100*dugCells/(dungeonX*dungeonY)));
     }
     
 }

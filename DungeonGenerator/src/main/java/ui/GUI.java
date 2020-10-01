@@ -10,7 +10,6 @@ import domain.CellularAutomaton;
 import domain.Dungeon;
 import domain.FloodFill;
 import domain.RandomWalk;
-import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +24,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -41,6 +41,9 @@ public class GUI extends Application {
     private double resolutionX;
     private double resolutionY;
     private int floodFillChoice;
+    private int canvasSize = 500;
+    private Canvas canvas = new Canvas(canvasSize, canvasSize);
+    private GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
     
     /**
      * Main method for launching JavaFX GUI
@@ -75,7 +78,7 @@ public class GUI extends Application {
         
         hbox.getChildren().addAll(cellular, walk, performanceTest);
 
-        Scene scene = new Scene(hbox, 1600, 800);
+        Scene scene = new Scene(hbox, 1200, 800);
         stage.setScene(scene);
         stage.show();
         
@@ -83,9 +86,9 @@ public class GUI extends Application {
     
     private void automatonView(Stage stage) {
         Label widthLabel = new Label("Dungeon width");
-        Spinner widthSpinner = new Spinner((int) 10, (int) 100000, (int) 100);
+        Spinner widthSpinner = new Spinner((int) 10, (int) this.canvasSize, (int) 100);
         Label heightLabel = new Label("Dungeon height");
-        Spinner heightSpinner = new Spinner((int) 10, (int) 100000, (int) 100);
+        Spinner heightSpinner = new Spinner((int) 10, (int) this.canvasSize, (int) 100);
         Label iterationLabel = new Label("Cellular automaton's iterations");
         Spinner iterationSpinner = new Spinner((int) 1, (int) 10, (int) 4);
         Label stoneLabel = new Label("Stone percent at start");
@@ -96,6 +99,16 @@ public class GUI extends Application {
         
         Button createAutomaton = new Button("Create a cellular automaton");
         
+        BorderPane border = new BorderPane();
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(10));
@@ -105,30 +118,30 @@ public class GUI extends Application {
         Button cleanUp = new Button("Clean up");
         Button floodFill = new Button("Flood fill");
         
-        Canvas canvas = new Canvas(500, 500);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        
         box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, iterationLabel, iterationSpinner, stoneLabel, stonePercentSpinner, floodFillChoiceLabel, cb, createAutomaton);
+        border.setCenter(box);
         
         createAutomaton.setOnAction(e -> {
             int iterations = (int) iterationSpinner.getValue();
             int width = (int) widthSpinner.getValue();
             int height = (int) heightSpinner.getValue();
-            this.resolutionY = 500/height;
-            this.resolutionX = 500/width;
+            this.resolutionY = this.canvasSize/height;
+            this.resolutionX = this.canvasSize/width;
             int stonePercent = (int) stonePercentSpinner.getValue();
             String choice = (String) cb.getValue();
             floodFillChoice = choice.equals("Forest fire") ? 0 : 1;
             this.automaton = new CellularAutomaton(iterations, height, width, stonePercent);
             this.automaton.initializeDungeon();
-            drawDungeon(gc, this.automaton.getDungeon());
+            drawDungeon(this.automaton.getDungeon());
             box.getChildren().clear();
-            box.getChildren().addAll(startAutomaton, cleanUp, floodFill, resetAutomaton, canvas);
+            box.getChildren().addAll(startAutomaton, cleanUp, floodFill, resetAutomaton);
+            border.setCenter(this.canvas);
+            border.setLeft(box);
         });      
         
         startAutomaton.setOnAction(e -> {
             this.automaton.runAutomaton();
-            drawDungeon(gc, this.automaton.getDungeon());
+            drawDungeon(this.automaton.getDungeon());
         });
         
         resetAutomaton.setOnAction(e -> {
@@ -138,16 +151,16 @@ public class GUI extends Application {
                 
         cleanUp.setOnAction(e -> {
             this.automaton.getDungeon().cleanUp();
-            drawDungeon(gc, this.automaton.getDungeon());
+            drawDungeon(this.automaton.getDungeon());
         });
         
         floodFill.setOnAction(e -> {
             this.fill = new FloodFill(this.automaton.getDungeon(), this.floodFillChoice);
             this.fill.findLargestConnectedArea();
-            drawDungeon(gc, this.fill.getDungeon());
+            drawDungeon(this.fill.getDungeon());
         });
         
-        Scene scene = new Scene(box, 1600, 800);
+        Scene scene = new Scene(border, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -155,9 +168,9 @@ public class GUI extends Application {
     private void walkView(Stage stage) {
          
         Label widthLabel = new Label("Dungeon width");
-        Spinner widthSpinner = new Spinner((int) 10, (int) 100000, (int) 100);
+        Spinner widthSpinner = new Spinner((int) 10, (int) this.canvasSize, (int) 100);
         Label heightLabel = new Label("Dungeon height");
-        Spinner heightSpinner = new Spinner((int) 10, (int) 100000, (int) 100);
+        Spinner heightSpinner = new Spinner((int) 10, (int) this.canvasSize, (int) 100);
         Label spawnLabel = new Label("Percent chance of spawning a new walker");
         Spinner spawnSpinner = new Spinner((int) 1, (int) 100, (int) 2);
         Label digLabel = new Label("Percent of area to dig");
@@ -171,6 +184,16 @@ public class GUI extends Application {
         
         Button createWalk = new Button("Create a random walk");
         
+        BorderPane border = new BorderPane();
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(10));
@@ -179,16 +202,16 @@ public class GUI extends Application {
         Button cleanUp = new Button("Clean up");
         Button floodFill = new Button("Flood fill");
         
-        Canvas canvas = new Canvas(500, 500);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        border.setCenter(box);
+
         
         box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, spawnLabel, spawnSpinner, digLabel, digSpinner, turnLabel, turnSpinner, complexBox, floodFillChoiceLabel, cb, createWalk);
         
         createWalk.setOnAction(e -> {
             int width = (int) widthSpinner.getValue();
             int height = (int) heightSpinner.getValue();
-            this.resolutionY = 500/height;
-            this.resolutionX = 500/width;
+            this.resolutionY = this.canvasSize/height;
+            this.resolutionX = this.canvasSize/width;
             int spawnChance = (int) spawnSpinner.getValue();
             int digPercent = (int) digSpinner.getValue();
             int turnChance = (int) turnSpinner.getValue();
@@ -196,14 +219,16 @@ public class GUI extends Application {
             String choice = (String) cb.getValue();
             floodFillChoice = choice.equals("Forest fire") ? 0 : 1;
             this.walk = new RandomWalk(height, width, spawnChance, digPercent, turnChance, complex);
-            drawDungeon(gc, this.walk.getDungeon());
+            drawDungeon(this.walk.getDungeon());
             box.getChildren().clear();
-            box.getChildren().addAll(startRandom, cleanUp, floodFill, resetRandom, canvas);
+            box.getChildren().addAll(startRandom, cleanUp, floodFill, resetRandom);
+            border.setCenter(this.canvas);
+            border.setLeft(box);
         });      
                                                 
         startRandom.setOnAction(e -> {
             this.walk.runRandomWalk();
-            drawDungeon(gc, this.walk.getDungeon());
+            drawDungeon(this.walk.getDungeon());
         });
         
         resetRandom.setOnAction(e -> {
@@ -212,16 +237,16 @@ public class GUI extends Application {
         
         cleanUp.setOnAction(e -> {
             this.walk.getDungeon().cleanUp();
-            drawDungeon(gc, this.walk.getDungeon());
+            drawDungeon(this.walk.getDungeon());
         });
         
         floodFill.setOnAction(e -> {
             this.fill = new FloodFill(this.walk.getDungeon(), this.floodFillChoice);
             this.fill.findLargestConnectedArea();
-            drawDungeon(gc, this.fill.getDungeon());
+            drawDungeon(this.fill.getDungeon());
         });
         
-        Scene scene = new Scene(box, 1600, 800);
+        Scene scene = new Scene(border, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -234,6 +259,16 @@ public class GUI extends Application {
         box.setPadding(new Insets(10));
         box.getChildren().addAll(generationTest, fillTest);
         
+        BorderPane border = new BorderPane();
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
         generationTest.setOnAction(e -> {
             generationTestView(stage);
         });
@@ -242,7 +277,9 @@ public class GUI extends Application {
             fillTestView(stage);
         });
         
-        Scene scene = new Scene(box, 1600, 800);
+        border.setCenter(box);
+        
+        Scene scene = new Scene(border, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -251,12 +288,25 @@ public class GUI extends Application {
         Label averageLabel = new Label("How many runs to average");
         Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
         Label maximumLabel = new Label("Dungeon's maximum height and width (note that value 10 means that dungeon will be 10*10=100 cells");
-        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(10, 100, 1000));
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(10, 100, 1000, 10000));
+        cb.setValue(100);
         Button beginButton = new Button("Begin performance test");
         
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(10));
+        
+        BorderPane border = new BorderPane();
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
+        border.setCenter(box);
         
         
         box.getChildren().addAll(averageLabel, averageSpinner, maximumLabel, cb, beginButton);
@@ -299,46 +349,13 @@ public class GUI extends Application {
             performanceTestView(stage);
         });
         
-        Scene scene = new Scene(box, 1600, 800);
+        Scene scene = new Scene(border, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
     
     private void fillTestView(Stage stage) {
-        ArrayList<Dungeon> dungeons = new ArrayList<>();
-        Dungeon dungeon1 = new Dungeon(10, 10);
-        for (int i = 0; i < 10; i++) {
-            dungeon1.changeCellToStone(1, i);
-        }
-        dungeons.add(dungeon1);
-        
-        Dungeon dungeon2 = new Dungeon(16, 16);
-        for (int i = 0; i < 16; i ++) {
-            dungeon2.changeCellToStone(3, i);
-            dungeon2.changeCellToStone(6, i);
-            dungeon2.changeCellToStone(i, 10);
-        }
-        dungeons.add(dungeon2);
-        
-        Dungeon dungeon3 = new Dungeon(100, 150);
-        for (int i = 0; i < 30; i++) {
-            dungeon3.changeCellToStone(10, i);
-            dungeon3.changeCellToStone(90, 149-i);
-        }
-        for (int i = 0; i < 10; i++) {
-            dungeon3.changeCellToStone(i, 29);
-            dungeon3.changeCellToStone(99-i, 120);
-        }
-        dungeons.add(dungeon3);
-        
-        Dungeon dungeon4 = new Dungeon(500, 500);
-        for(int i = 0; i < 360; i++) {
-            int x1 = (int) (100 * Math.cos(i * Math.PI / 180));
-            int y1 = (int) (100 * Math.sin(i * Math.PI / 180));
-            dungeon4.changeCellToStone(250 + y1, 250 + x1);
-        }
-        dungeons.add(dungeon4);
-
+        Dungeon[] dungeons = createDungeonsForPerformanceTests(); 
         
         Label averageLabel = new Label("How many runs to average");
         Spinner averageSpinner = new Spinner((int) 1, (int) 1000, (int) 100);
@@ -348,6 +365,18 @@ public class GUI extends Application {
         box.setAlignment(Pos.CENTER);
         box.setPadding(new Insets(10));
         
+        BorderPane border = new BorderPane(); 
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
+        border.setCenter(box);
+        
         
         box.getChildren().addAll(averageLabel, averageSpinner, beginButton);
         ListView<String> listView = new ListView<String>();
@@ -356,8 +385,8 @@ public class GUI extends Application {
         
         beginButton.setOnAction(e -> {
             int average = (int) averageSpinner.getValue();
+            int i = 1;
             for (Dungeon d : dungeons) {
-                int i = 1;
                 long forestFireTime = 0;
                 long scanFillTime = 0;
                 long startTime = 0;
@@ -388,36 +417,128 @@ public class GUI extends Application {
             performanceTestView(stage);
         });
         
-        Scene scene = new Scene(box, 1600, 800);
+        Scene scene = new Scene(border, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
     
-    private void drawDungeon(GraphicsContext gc, Dungeon d) {
-        gc.setFill(Color.WHITE);
+    private void drawDungeon(Dungeon d) {
+        this.graphicsContext.setFill(Color.WHITE);
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (d.cellIsFloor(y, x)) {
-                    gc.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
+                    this.graphicsContext.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
-        gc.setFill(Color.BLACK);
+        this.graphicsContext.setFill(Color.BLACK);
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (d.cellIsStone(y, x)) {
-                    gc.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
+                    this.graphicsContext.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
         
-        gc.setFill(Color.LIGHTBLUE);
+        this.graphicsContext.setFill(Color.LIGHTBLUE);
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (!d.cellIsStone(y, x) && !d.cellIsFloor(y, x)) {
-                    gc.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
+                    this.graphicsContext.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
+    }
+    
+    private Dungeon[] createDungeonsForPerformanceTests() {
+        Dungeon dungeon1 = new Dungeon(10, 10);
+        for (int i = 0; i < 10; i++) {
+            dungeon1.changeCellToStone(1, i);
+        }
+        
+        
+        Dungeon dungeon2 = new Dungeon(16, 16);
+        for (int i = 0; i < 16; i ++) {
+            dungeon2.changeCellToStone(3, i);
+            dungeon2.changeCellToStone(6, i);
+            dungeon2.changeCellToStone(i, 10);
+        }
+        
+        
+        Dungeon dungeon3 = new Dungeon(100, 150);
+        for (int i = 0; i < 30; i++) {
+            dungeon3.changeCellToStone(10, i);
+            dungeon3.changeCellToStone(90, 149-i);
+        }
+        for (int i = 0; i < 10; i++) {
+            dungeon3.changeCellToStone(i, 29);
+            dungeon3.changeCellToStone(99-i, 120);
+        }
+        
+        
+        Dungeon dungeon4 = new Dungeon(500, 500);
+        for(int i = 0; i < 360; i++) {
+            int x1 = (int) (100 * Math.cos(i * Math.PI / 180));
+            int y1 = (int) (100 * Math.sin(i * Math.PI / 180));
+            dungeon4.changeCellToStone(250 + y1, 250 + x1);
+        }
+        
+        
+        Dungeon dungeon5 = new Dungeon(500, 500);
+        for (int i = 150; i <= 350; i++) {
+            for (int j = -1; j <= 1; j++) {
+                dungeon5.changeCellToStone(150+j, i);
+                dungeon5.changeCellToStone(350+j, i);
+                dungeon5.changeCellToStone(i, 150+j);
+                dungeon5.changeCellToStone(i, 350+j);
+            }
+        }        
+        for (int i = 100; i <= 300; i++) {
+            for (int j = -1; j <= 1; j++) {
+                dungeon5.changeCellToStone(100+j, i);
+                dungeon5.changeCellToStone(300+j, i);
+                dungeon5.changeCellToStone(i, 100+j);
+                dungeon5.changeCellToStone(i, 300+j);
+            }
+        }
+        for (int i = 200; i <= 400; i++) {
+            for (int j = -1; j <= 1; j++) {
+                dungeon5.changeCellToStone(200+j, i);
+                dungeon5.changeCellToStone(400+j, i);
+                dungeon5.changeCellToStone(i, 200+j);
+                dungeon5.changeCellToStone(i, 400+j);
+            }
+        }
+        
+        
+        Dungeon dungeon6 = new Dungeon(800, 800);
+        for (int i = 100; i <= 700; i++) {
+            for (int j = -1; j <= 1; j++) {
+                dungeon6.changeCellToStone(100+j, i);
+                dungeon6.changeCellToStone(700+j, i);
+                dungeon6.changeCellToStone(i, 100+j);
+                dungeon6.changeCellToStone(i, 700+j);
+            }
+        }
+        for (int i = 300; i <= 500; i++) {
+            for (int j = -1; j <= 1; j++) {
+                dungeon6.changeCellToStone(300+j, i);
+                dungeon6.changeCellToStone(500+j, i);
+                dungeon6.changeCellToStone(i, 300+j);
+                dungeon6.changeCellToStone(i, 500+j);
+            }
+        }
+        for (int i = 380; i <= 420; i++) {
+            for (int j = -1; j <= 1; j++) {
+                dungeon6.changeCellToStone(380+j, i);
+                dungeon6.changeCellToStone(420+j, i);
+                dungeon6.changeCellToStone(i, 380+j);
+                dungeon6.changeCellToStone(i, 420+j);
+            }
+        }
+        
+        Dungeon[] dungeons = {dungeon1, dungeon2, dungeon3, dungeon4, dungeon5, dungeon6};
+        
+        return dungeons;
     }
 }
