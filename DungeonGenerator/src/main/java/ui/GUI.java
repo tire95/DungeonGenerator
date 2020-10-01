@@ -423,6 +423,7 @@ public class GUI extends Application {
     }
     
     private void drawDungeon(Dungeon d) {
+        this.graphicsContext.clearRect(0, 0, this.canvasSize, this.canvasSize);
         this.graphicsContext.setFill(Color.WHITE);
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
