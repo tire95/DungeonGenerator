@@ -47,7 +47,7 @@ public class GUI extends Application {
     
     /**
      * Main method for launching JavaFX GUI
-     * @param args
+     * @param args command-line arguments
      */
     public static void main(String[] args) {
         launch(args);
@@ -71,7 +71,7 @@ public class GUI extends Application {
             walkView(stage);
         });
         
-        performanceTest.setOnAction(e ->{
+        performanceTest.setOnAction(e -> {
             performanceTestView(stage);
         });
         
@@ -125,8 +125,8 @@ public class GUI extends Application {
             int iterations = (int) iterationSpinner.getValue();
             int width = (int) widthSpinner.getValue();
             int height = (int) heightSpinner.getValue();
-            this.resolutionY = this.canvasSize/height;
-            this.resolutionX = this.canvasSize/width;
+            this.resolutionY = this.canvasSize / height;
+            this.resolutionX = this.canvasSize / width;
             int stonePercent = (int) stonePercentSpinner.getValue();
             String choice = (String) cb.getValue();
             floodFillChoice = choice.equals("Forest fire") ? 0 : 1;
@@ -210,8 +210,8 @@ public class GUI extends Application {
         createWalk.setOnAction(e -> {
             int width = (int) widthSpinner.getValue();
             int height = (int) heightSpinner.getValue();
-            this.resolutionY = this.canvasSize/height;
-            this.resolutionX = this.canvasSize/width;
+            this.resolutionY = this.canvasSize / height;
+            this.resolutionX = this.canvasSize / width;
             int spawnChance = (int) spawnSpinner.getValue();
             int digPercent = (int) digSpinner.getValue();
             int turnChance = (int) turnSpinner.getValue();
@@ -337,8 +337,8 @@ public class GUI extends Application {
                     endTime = System.nanoTime();
                     walkTimeSimple += (endTime - startTime);
                 }
-                results.add("Cellular automaton with dimension: " + i*i + ", average time: " + automatonTime/average);
-                results.add("Simple random walk with dimension: " + i*i + ", average time: " + walkTimeSimple/average);
+                results.add("Cellular automaton with dimension: " + i * i + ", average time: " + automatonTime / average);
+                results.add("Simple random walk with dimension: " + i * i + ", average time: " + walkTimeSimple / average);
             }
             listView.setItems(results);
             box.getChildren().clear();
@@ -403,8 +403,8 @@ public class GUI extends Application {
                     endTime = System.nanoTime();
                     scanFillTime += (endTime - startTime);
                 }
-                results.add("Forest fire for dungeon " + i + ", average time: " + forestFireTime/average);
-                results.add("Scan fill for dungeon " + i + ", average time: " + scanFillTime/average);
+                results.add("Forest fire for dungeon " + i + ", average time: " + forestFireTime / average);
+                results.add("Scan fill for dungeon " + i + ", average time: " + scanFillTime / average);
                 i++;
             }
 
@@ -428,7 +428,7 @@ public class GUI extends Application {
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (d.cellIsFloor(y, x)) {
-                    this.graphicsContext.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
+                    this.graphicsContext.fillRect(x * this.resolutionX, y * this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
@@ -436,7 +436,7 @@ public class GUI extends Application {
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (d.cellIsStone(y, x)) {
-                    this.graphicsContext.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
+                    this.graphicsContext.fillRect(x * this.resolutionX, y * this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
@@ -445,7 +445,7 @@ public class GUI extends Application {
         for (int y = 0; y < d.getY(); y++) {
             for (int x = 0; x < d.getX(); x++) {
                 if (!d.cellIsStone(y, x) && !d.cellIsFloor(y, x)) {
-                    this.graphicsContext.fillRect(x*this.resolutionX, y*this.resolutionY, this.resolutionX, this.resolutionY);
+                    this.graphicsContext.fillRect(x * this.resolutionX, y * this.resolutionY, this.resolutionX, this.resolutionY);
                 }
             }
         }
@@ -459,7 +459,7 @@ public class GUI extends Application {
         
         
         Dungeon dungeon2 = new Dungeon(16, 16);
-        for (int i = 0; i < 16; i ++) {
+        for (int i = 0; i < 16; i++) {
             dungeon2.changeCellToStone(3, i);
             dungeon2.changeCellToStone(6, i);
             dungeon2.changeCellToStone(i, 10);
@@ -469,16 +469,16 @@ public class GUI extends Application {
         Dungeon dungeon3 = new Dungeon(100, 150);
         for (int i = 0; i < 30; i++) {
             dungeon3.changeCellToStone(10, i);
-            dungeon3.changeCellToStone(90, 149-i);
+            dungeon3.changeCellToStone(90, 149 - i);
         }
         for (int i = 0; i < 10; i++) {
             dungeon3.changeCellToStone(i, 29);
-            dungeon3.changeCellToStone(99-i, 120);
+            dungeon3.changeCellToStone(99 - i, 120);
         }
         
         
         Dungeon dungeon4 = new Dungeon(500, 500);
-        for(int i = 0; i < 360; i++) {
+        for (int i = 0; i < 360; i++) {
             int x1 = (int) (100 * Math.cos(i * Math.PI / 180));
             int y1 = (int) (100 * Math.sin(i * Math.PI / 180));
             dungeon4.changeCellToStone(250 + y1, 250 + x1);
@@ -488,26 +488,26 @@ public class GUI extends Application {
         Dungeon dungeon5 = new Dungeon(500, 500);
         for (int i = 150; i <= 350; i++) {
             for (int j = -1; j <= 1; j++) {
-                dungeon5.changeCellToStone(150+j, i);
-                dungeon5.changeCellToStone(350+j, i);
-                dungeon5.changeCellToStone(i, 150+j);
-                dungeon5.changeCellToStone(i, 350+j);
+                dungeon5.changeCellToStone(150 + j, i);
+                dungeon5.changeCellToStone(350 + j, i);
+                dungeon5.changeCellToStone(i, 150 + j);
+                dungeon5.changeCellToStone(i, 350 + j);
             }
         }        
         for (int i = 100; i <= 300; i++) {
             for (int j = -1; j <= 1; j++) {
-                dungeon5.changeCellToStone(100+j, i);
-                dungeon5.changeCellToStone(300+j, i);
-                dungeon5.changeCellToStone(i, 100+j);
-                dungeon5.changeCellToStone(i, 300+j);
+                dungeon5.changeCellToStone(100 + j, i);
+                dungeon5.changeCellToStone(300 + j, i);
+                dungeon5.changeCellToStone(i, 100 + j);
+                dungeon5.changeCellToStone(i, 300 + j);
             }
         }
         for (int i = 200; i <= 400; i++) {
             for (int j = -1; j <= 1; j++) {
-                dungeon5.changeCellToStone(200+j, i);
-                dungeon5.changeCellToStone(400+j, i);
-                dungeon5.changeCellToStone(i, 200+j);
-                dungeon5.changeCellToStone(i, 400+j);
+                dungeon5.changeCellToStone(200 + j, i);
+                dungeon5.changeCellToStone(400 + j, i);
+                dungeon5.changeCellToStone(i, 200 + j);
+                dungeon5.changeCellToStone(i, 400 + j);
             }
         }
         
@@ -515,26 +515,26 @@ public class GUI extends Application {
         Dungeon dungeon6 = new Dungeon(800, 800);
         for (int i = 100; i <= 700; i++) {
             for (int j = -1; j <= 1; j++) {
-                dungeon6.changeCellToStone(100+j, i);
-                dungeon6.changeCellToStone(700+j, i);
-                dungeon6.changeCellToStone(i, 100+j);
-                dungeon6.changeCellToStone(i, 700+j);
+                dungeon6.changeCellToStone(100 + j, i);
+                dungeon6.changeCellToStone(700 + j, i);
+                dungeon6.changeCellToStone(i, 100 + j);
+                dungeon6.changeCellToStone(i, 700 + j);
             }
         }
         for (int i = 300; i <= 500; i++) {
             for (int j = -1; j <= 1; j++) {
-                dungeon6.changeCellToStone(300+j, i);
-                dungeon6.changeCellToStone(500+j, i);
-                dungeon6.changeCellToStone(i, 300+j);
-                dungeon6.changeCellToStone(i, 500+j);
+                dungeon6.changeCellToStone(300 + j, i);
+                dungeon6.changeCellToStone(500 + j, i);
+                dungeon6.changeCellToStone(i, 300 + j);
+                dungeon6.changeCellToStone(i, 500 + j);
             }
         }
         for (int i = 380; i <= 420; i++) {
             for (int j = -1; j <= 1; j++) {
-                dungeon6.changeCellToStone(380+j, i);
-                dungeon6.changeCellToStone(420+j, i);
-                dungeon6.changeCellToStone(i, 380+j);
-                dungeon6.changeCellToStone(i, 420+j);
+                dungeon6.changeCellToStone(380 + j, i);
+                dungeon6.changeCellToStone(420 + j, i);
+                dungeon6.changeCellToStone(i, 380 + j);
+                dungeon6.changeCellToStone(i, 420 + j);
             }
         }
         

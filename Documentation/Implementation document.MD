@@ -32,7 +32,7 @@ Below is the pseudocode for the cellular automaton.
 		
 In general, dungeon initialization is not a bottleneck as `stonePercentAtStart` should be between 40-55% (otherwise the generated dungeon will look bad). Therefore, we need to consider the algorithm itself.
 
-The cellular automaton generally needs between 3 to 6 iterations before little changes between iterations. This means that the two inner for-loops dominate the time complexity, and therefore the time complexity is `O(dungeonX * dungeonY)`. We can approximate this as `O(n^2)`, where `n = max(dungeonX, dungeonY)`. Another way of saying this is that the time complexity is `O(m)`, where `m = dungeonX * dungeonY` is the size of the dungeon.
+The cellular automaton generally needs between 3 to 6 iterations until there are little changed between iterations. This means that the two inner for-loops dominate the time complexity, and therefore the time complexity is `O(dungeonX * dungeonY)`. We can approximate this as `O(n^2)`, where `n = max(dungeonX, dungeonY)`. Another way of saying this is that the time complexity is `O(m)`, where `m = dungeonX * dungeonY` is the size of the dungeon.
 
 As the algorithm needs to store two arrays for the cells (`dungeonGrid` and `temporaryGrid`), the space complexity is `O(2n^2)` which simplifies to `O(n^2)` (or `O(m)`).
 

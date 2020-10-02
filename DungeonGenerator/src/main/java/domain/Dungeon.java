@@ -58,7 +58,7 @@ public class Dungeon {
                 // if a "cell" is outside the grid's bounds, count it as "stone"
                 if (i < 0 || i >= this.y || j < 0 || j >= this.x) {
                     neighbors++;
-                } else if (cellIsStone(i, j)){
+                } else if (cellIsStone(i, j)) {
                     neighbors++;
                 }
             }
@@ -184,7 +184,7 @@ public class Dungeon {
      * Return cell's state
      * @param y y coordinate of cell
      * @param x x coordinate of cell
-     * @return
+     * @return cels state
      */
     public int getCell(int y, int x) {
         return this.grid[y][x];
