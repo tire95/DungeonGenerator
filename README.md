@@ -12,6 +12,10 @@
 
 [Week 5 report](https://github.com/tire95/DungeonGenerator/blob/master/Documentation/Week%20reports/Week%205%20report.MD)
 
+[Implementation document](https://github.com/tire95/DungeonGenerator/blob/master/Documentation/Implementation%20document.MD)
+
+[Testing document](https://github.com/tire95/DungeonGenerator/blob/master/Documentation/Testing%20document.MD)
+
 Test coverage, checkstyle and JavaDoc have been configured and can be run once the project is downloaded.
 
 ![test coverage](/Documentation/Pictures/jacoco.PNG)
