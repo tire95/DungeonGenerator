@@ -227,7 +227,11 @@ public class GUI extends Application {
         });      
                                                 
         startRandom.setOnAction(e -> {
-            this.walk.runRandomWalk();
+            if (this.walk.getUseComplexWalk()) {
+                this.walk.runComplexWalk();
+            } else {
+                this.walk.runSimpleWalk();
+            }
             drawDungeon(this.walk.getDungeon());
         });
         
@@ -333,7 +337,7 @@ public class GUI extends Application {
                     automatonTime += (endTime - startTime);
                     this.walk = new RandomWalk(i, i, 4, 50, 0, false);
                     startTime = System.nanoTime();
-                    this.walk.runRandomWalk();
+                    this.walk.runSimpleWalk();
                     endTime = System.nanoTime();
                     walkTimeSimple += (endTime - startTime);
                 }

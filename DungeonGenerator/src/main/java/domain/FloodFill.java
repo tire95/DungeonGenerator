@@ -94,23 +94,16 @@ public class FloodFill {
         while (!this.cells.isEmpty()) {
             Cell currentCell = this.cells.dequeue();
             int yCoord = currentCell.getCurrentY();
-            int w = currentCell.getCurrentX();
-            int e = currentCell.getCurrentX();
-            boolean wLimit = false;
-            boolean eLimit = false;
-            while (!wLimit & !eLimit) {
-                if ((w - 1 >= 0) && this.dungeon.getCell(yCoord, w - 1) == target) {
-                    w--;
-                } else {
-                    wLimit = true;
-                }
-                if ((e + 1 < this.dungeon.getX()) && this.dungeon.getCell(yCoord, e + 1) == target) {
-                    e++;
-                } else {
-                    eLimit = true;
-                }
+            int left = currentCell.getCurrentX();
+            int right = currentCell.getCurrentX();
+            while ((left - 1 >= 0) && this.dungeon.getCell(yCoord, left - 1) == target) {
+                left--;
             }
-            for (int i = w; i <= e; i++) {
+            while ((right + 1 < this.dungeon.getX()) && this.dungeon.getCell(yCoord, right + 1) == target) {
+                right++;
+            }
+            
+            for (int i = left; i <= right; i++) {
                 this.dungeon.setCell(yCoord, i, replacement);
                 cells++;
                 if ((yCoord + 1 < this.dungeon.getY()) && this.dungeon.getCell(yCoord + 1, i) == target) {

@@ -66,8 +66,6 @@ public class CellularAutomaton {
             tempGrid = new int[dungeonY][dungeonX];
 
         }
-
-
     }
     
     /**

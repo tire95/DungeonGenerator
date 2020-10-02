@@ -52,7 +52,7 @@ public class TestRandomWalk {
     
     @Test
     public void testRunRandomWalk() {
-        testRandomWalk.runRandomWalk();
+        testRandomWalk.runSimpleWalk();
         int dugCells = 0;
         int dungeonX = testRandomWalk.getDungeon().getX();
         int dungeonY = testRandomWalk.getDungeon().getY();
@@ -65,7 +65,7 @@ public class TestRandomWalk {
         }
         assertTrue(digPercent <= (100*dugCells/(dungeonX*dungeonY)));
         
-        testRandomWalk2.runRandomWalk();
+        testRandomWalk2.runSimpleWalk();
         dugCells = 0;
         dungeonX = testRandomWalk2.getDungeon().getX();
         dungeonY = testRandomWalk2.getDungeon().getY();
@@ -78,7 +78,7 @@ public class TestRandomWalk {
         }
         assertTrue(digPercent/2 <= (100*dugCells/(dungeonX*dungeonY)));
         
-        testRandomWalk3.runRandomWalk();
+        testRandomWalk3.runSimpleWalk();
         dugCells = 0;
         dungeonX = testRandomWalk3.getDungeon().getX();
         dungeonY = testRandomWalk3.getDungeon().getY();
@@ -91,7 +91,7 @@ public class TestRandomWalk {
         }
         assertTrue(digPercent*2 <= (100*dugCells/(dungeonX*dungeonY)));
         
-        testRandomWalk4.runRandomWalk();
+        testRandomWalk4.runComplexWalk();
         dugCells = 0;
         dungeonX = testRandomWalk4.getDungeon().getX();
         dungeonY = testRandomWalk4.getDungeon().getY();
@@ -104,7 +104,7 @@ public class TestRandomWalk {
         }
         assertTrue(digPercent <= (100*dugCells/(dungeonX*dungeonY)));
         
-        testRandomWalk5.runRandomWalk();
+        testRandomWalk5.runComplexWalk();
         dugCells = 0;
         dungeonX = testRandomWalk5.getDungeon().getX();
         dungeonY = testRandomWalk5.getDungeon().getY();

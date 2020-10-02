@@ -20,7 +20,7 @@ public class Cell {
     private int turnChance;
     
     /**
-     * Constructor for complex random complexWalk
+     * Constructor for complexWalk
      * @param x current x coordinate of the walker
      * @param y current y coordinate of the walker
      * @param turnChance chance of walker turning 90 degrees (percentage)
@@ -32,7 +32,7 @@ public class Cell {
     }
 
     /**
-     * Constructor for simple random complexWalk and flood fill
+     * Constructor for simpleWalk and flood fill
      * @param x current x coordinate of the walker
      * @param y current y coordinate of the walker
      */    

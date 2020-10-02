@@ -56,7 +56,7 @@ public class Dungeon {
             for (int j = xCoord - 1; j <= xCoord + 1; j++) {
                 
                 // if a "cell" is outside the grid's bounds, count it as "stone"
-                if (i < 0 || i >= this.y || j < 0 || j >= this.x) {
+                if (!cellIsInDungeon(i, j)) {
                     neighbors++;
                 } else if (cellIsStone(i, j)) {
                     neighbors++;
@@ -149,9 +149,10 @@ public class Dungeon {
      * Cleans the dungeon by removing singular stone cells and stops once there's nothing to clean
      */
     public void cleanUp() {
-        boolean changed = false;
+        boolean changed = true;
         outerloop:
-        while (true) {
+        while (changed) {
+            changed = false;
             for (int yCoord = 1; yCoord < this.y - 1; yCoord++) {
                 for (int xCoord = 1; xCoord < this.x - 1; xCoord++) {
                     if (cellIsStone(yCoord, xCoord)) {
@@ -161,11 +162,6 @@ public class Dungeon {
                         }
                     }
                 }
-            }
-            if (changed) {
-                changed = false;
-            } else {
-                break outerloop;
             }
         }
     }
@@ -188,6 +184,16 @@ public class Dungeon {
      */
     public int getCell(int y, int x) {
         return this.grid[y][x];
+    }
+    
+    /**
+     * Check if given cell is in dungeon
+     * @param y y coordinate of cell
+     * @param x x coordinate of cell
+     * @return true if cell is in dungeon, false otherwise
+     */
+    public boolean cellIsInDungeon(int y, int x) {
+        return (x >= 0) && (x < this.x) && (y >= 0) && (y < this.y);
     }
     
 }
