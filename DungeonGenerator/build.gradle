@@ -20,6 +20,10 @@ sourceCompatibility = '1.8'
 // Note however, that you may define your own "run" and "debug" task if you
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
+application {
+    // Define the main class for the application
+    mainClassName = 'ui.GUI'
+}
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'ui.GUI'
 }
@@ -47,8 +51,8 @@ jacocoTestReport {
         html.enabled = true
     }
     afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
+        getClassDirectories().setFrom(classDirectories.files.collect {
+                fileTree(dir: it,
                     exclude: ['**/ui/**'])
         })
     }

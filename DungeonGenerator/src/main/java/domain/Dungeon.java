@@ -45,7 +45,8 @@ public class Dungeon {
     
     /**
      * Returns the number of neighboring cells with the state stone (i.e. 1).
-     * For a cell at an edge/corner, every "cell" that's outside of the grid's bounds is counted as a stone cell; otherwise cellular automaton wouldn't work properly
+     * For a cell at an edge/corner, every "cell" that's outside of the grid is counted as a stone cell; 
+     * otherwise cellular automaton wouldn't work properly
      * @param yCoord the y coordinate of the given cell
      * @param xCoord the x coordinate of the given cell
      * @return the number of stone neighbors for the given cell
@@ -55,7 +56,7 @@ public class Dungeon {
         for (int i = yCoord - 1; i <= yCoord + 1; i++) {
             for (int j = xCoord - 1; j <= xCoord + 1; j++) {
                 
-                // if a "cell" is outside the grid's bounds, count it as "stone"
+                // if a "cell" is outside the grid, count it as "stone"
                 if (!cellIsInDungeon(i, j)) {
                     neighbors++;
                 } else if (cellIsStone(i, j)) {
@@ -69,7 +70,6 @@ public class Dungeon {
     /**
      * Returns the number of adjacent cells with the state stone (i.e. 1).
      * Adjacent cells are the ones directly above, below, and to the sides.
-     * This method is used in dungeon clean up
      * @param y the y coordinate of the given cell
      * @param x the x coordinate of the given cell
      * @return the number of adjacent stone neighbors for the given cell
@@ -150,7 +150,6 @@ public class Dungeon {
      */
     public void cleanUp() {
         boolean changed = true;
-        outerloop:
         while (changed) {
             changed = false;
             for (int yCoord = 1; yCoord < this.y - 1; yCoord++) {
@@ -180,7 +179,7 @@ public class Dungeon {
      * Return cell's state
      * @param y y coordinate of cell
      * @param x x coordinate of cell
-     * @return cels state
+     * @return cell's state
      */
     public int getCell(int y, int x) {
         return this.grid[y][x];

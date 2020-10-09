@@ -9,7 +9,7 @@ package domain;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * An entity used in random complexWalk and flood fill algorithms
+ * An entity used in random walk and flood fill algorithms
  * @author timot
  */
 public class Cell {

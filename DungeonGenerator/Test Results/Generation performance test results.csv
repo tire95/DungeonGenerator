@@ -1,0 +1,29 @@
+
+Run on: 2020-10-09 at: 14:02:55.763
+Algorithm,Dimension,Average time,
+Cellular automaton,100,612630,
+Random walk,100,419700,
+Cellular automaton,1000,1457010,
+Random walk,1000,13801820,
+
+Run on: 2020-10-09 at: 14:03:02.191
+Algorithm,Dimension,Average time,
+Cellular automaton,100,151610,
+Random walk,100,42170,
+
+Run on: 2020-10-09 at: 14:03:24.563
+Algorithm,Dimension,Average time,
+Cellular automaton,100,104940,
+Random walk,100,25050,
+Cellular automaton,1000,770070,
+Random walk,1000,10564100,
+Cellular automaton,10000,2515310,
+Random walk,10000,1658870,
+
+Run on: 2020-10-09 at: 14:05:29.876
+Algorithm,Dimension,Average time,
+Cellular automaton,100,666840,
+Random walk,100,298430,
+Cellular automaton,1000,1660280,
+Random walk,1000,14054060,
+

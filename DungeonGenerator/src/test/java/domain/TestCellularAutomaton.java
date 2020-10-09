@@ -15,10 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author timot
- */
 public class TestCellularAutomaton {
     private CellularAutomaton testCellular;
     private CellularAutomaton testCellular2;
@@ -43,9 +39,9 @@ public class TestCellularAutomaton {
     @After
     public void tearDown() {
     }
-    
+
     @Test
-    public void testInitializeDungeon() {
+    public void testInitializeDungeonForCellular1() {
         testCellular.initializeDungeon();
         int changedCells = 0;
         int dungeonY = testCellular.getDungeon().getY();
@@ -58,11 +54,14 @@ public class TestCellularAutomaton {
             }
         }
         assertTrue(testCellular.getStonePercent() <= 100*changedCells/(dungeonX*dungeonY));
-        
+    }
+    
+    @Test
+    public void testInitializeDungeonForCellular2() {
         testCellular2.initializeDungeon();
-        changedCells = 0;
-        dungeonY = testCellular2.getDungeon().getY();
-        dungeonX = testCellular2.getDungeon().getX();
+        int changedCells = 0;
+        int dungeonY = testCellular2.getDungeon().getY();
+        int dungeonX = testCellular2.getDungeon().getX();
         for (int y = 0; y < dungeonY; y++) {
             for (int x = 0; x < dungeonX; x++) {
                 if (!testCellular2.getDungeon().cellIsFloor(y, x)) {
@@ -74,12 +73,12 @@ public class TestCellularAutomaton {
     }
     
     @Test
-    public void testIterations() {
+    public void testGetIterations() {
         assertEquals(2, testCellular.getIterations());
     }
     
     @Test
-    public void testReset() {
+    public void testResetForCellular1() {
         testCellular.initializeDungeon();
         testCellular.reset();
         int dungeonY = testCellular.getDungeon().getY();
@@ -89,11 +88,14 @@ public class TestCellularAutomaton {
                 assertTrue(testCellular.getDungeon().cellIsFloor(y, x));
             }
         }
-        
+    }
+    
+    @Test
+    public void testResetForCellular2() {
         testCellular2.initializeDungeon();
         testCellular2.reset();
-        dungeonY = testCellular2.getDungeon().getY();
-        dungeonX = testCellular2.getDungeon().getX();
+        int dungeonY = testCellular2.getDungeon().getY();
+        int dungeonX = testCellular2.getDungeon().getX();
         for (int y = 0; y < dungeonY; y++) {
             for (int x = 0; x < dungeonX; x++) {
                 assertTrue(testCellular2.getDungeon().cellIsFloor(y, x));

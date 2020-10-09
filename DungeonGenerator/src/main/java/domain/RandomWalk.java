@@ -43,48 +43,7 @@ public class RandomWalk {
     /**
      * Runs the algorithm for dungeon generation
      */
-    public void runSimpleWalk() {
-        int dungeonX = this.dungeon.getX();
-        int dungeonY = this.dungeon.getY();
-        int totalCells = dungeonX * dungeonY;
-        int changedCells = 0;
-        this.walkers.enqueue(new Cell(dungeonY / 2, dungeonX / 2));
-        
-        while ((100 * changedCells / totalCells) < this.digPercent) {
-            Cell nextWalker = this.walkers.dequeue();
-            nextWalker.simpleWalk();
-            int currentX = nextWalker.getCurrentX();
-            int currentY = nextWalker.getCurrentY();
-            
-            // check if the walker is still in dungeon
-            if (this.dungeon.cellIsInDungeon(currentY, currentX)) {
-                if (this.dungeon.cellIsStone(currentY, currentX)) {
-                    this.dungeon.changeCellToFloor(currentY, currentX);
-                    changedCells++;
-                }
-                
-                // if the walker has stone cells next to it or otherwise the queue is empty, keep the walker alive
-                if ((this.dungeon.checkNumberOfStoneNeighbors(currentY, currentX) > 0) || this.walkers.isEmpty()) {
-                    this.walkers.enqueue(nextWalker);
-                    
-                    // randomly spawn a new walker where the current walker is
-                    if (ThreadLocalRandom.current().nextInt(1, 101) < this.spawnChance) {
-                        this.walkers.enqueue(new Cell(currentY, currentX));
-                    }
-                }
-            }
-            
-            // if the last walker walked out of the dungeon, spawn a new walker
-            if (this.walkers.isEmpty()) {
-                this.walkers.enqueue(new Cell(dungeonY / 2, dungeonX / 2));
-            }
-        }
-    }
-    
-    /**
-     * Runs the algorithm for dungeon generation
-     */
-    public void runComplexWalk() {
+    public void runRandomWalk() {
         int dungeonX = this.dungeon.getX();
         int dungeonY = this.dungeon.getY();
         int totalCells = dungeonX * dungeonY;
@@ -93,11 +52,14 @@ public class RandomWalk {
         
         while ((100 * changedCells / totalCells) < this.digPercent) {
             Cell nextWalker = this.walkers.dequeue();
-            nextWalker.complexWalk();
+            if (this.useComplexWalk) {
+                nextWalker.complexWalk();
+            } else {
+                nextWalker.simpleWalk();
+            }
             int currentX = nextWalker.getCurrentX();
             int currentY = nextWalker.getCurrentY();
             
-            // check if the walker is still in dungeon
             if (this.dungeon.cellIsInDungeon(currentY, currentX)) {
                 if (this.dungeon.cellIsStone(currentY, currentX)) {
                     this.dungeon.changeCellToFloor(currentY, currentX);
@@ -140,14 +102,6 @@ public class RandomWalk {
                 this.dungeon.changeCellToStone(y, x);
             }
         }
-    }
-    
-    /**
-     * Check if this random walk uses complex walk
-     * @return true if complex walk is used
-     */
-    public boolean getUseComplexWalk() {
-        return this.useComplexWalk;
     }
     
 }

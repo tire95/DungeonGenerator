@@ -13,9 +13,9 @@ import domain.Cell;
  * @author timot
  */
 public class CellQueue {
-    private int rear;
-    private int front;
-    private int size;
+    private int rear;   // index of last item
+    private int front;  // index of first item
+    private int size;   // number of items in queue
     private Cell[] queue;
     
     /**
@@ -34,6 +34,7 @@ public class CellQueue {
      */
     public void enqueue(Cell cell) {
 
+        // if the queue is full, double the size
         if (this.rear == this.size - 1) {
             growQueue();
         }
@@ -46,6 +47,8 @@ public class CellQueue {
      * @return first cell
      */
     public Cell dequeue() {
+        
+        // if the queue is only quarter full, half the size
         if ((this.rear - this.front <= this.size / 4) && (this.size >= 20)) {
             reduceQueue();
         }

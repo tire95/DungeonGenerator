@@ -14,14 +14,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author timot
- */
+
 public class TestFloodFill {
     private FloodFill testFloodFill1;
     private FloodFill testFloodFill2;
-    
+
     
     public TestFloodFill() {
     }
@@ -43,28 +40,48 @@ public class TestFloodFill {
     @After
     public void tearDown() {
     }
-    
+
     @Test
-    public void testFloodFill1() {
+    public void testForestFire1() {
+        
+        // draw a horizontal line
         for (int i = 0; i < 10; i++) {
             testFloodFill1.getDungeon().changeCellToStone(1, i);
         }
+        
+        // begin forest fill above the line
         testFloodFill1.forestFire(0, 0, 0, 2);
+        
         for (int i = 0; i < 10; i++) {
+            
+            // check that forest fire found all cells above the line
             assertFalse(testFloodFill1.getDungeon().cellIsFloor(0, i));
             assertFalse(testFloodFill1.getDungeon().cellIsStone(0, i));
+            
+            // check that forest fire didn't affect the line or cells below the line
             assertTrue(testFloodFill1.getDungeon().cellIsStone(1, i));
             for (int j = 2; j < 10; j++) {
                 assertTrue(testFloodFill1.getDungeon().cellIsFloor(j, i));
             }
         }
+    }
+    
+    @Test
+    public void testScanFill1() {
         
+        // draw a horizontal line
         for (int i = 0; i < 10; i++) {
             testFloodFill2.getDungeon().changeCellToStone(1, i);
         }
+        
+        // begin scan fill above the line
         testFloodFill2.scanFill(0, 0, 0, 2);
         for (int i = 0; i < 10; i++) {
+            
+            // check that scan fill found all cells above the line
             assertFalse(testFloodFill2.getDungeon().cellIsStone(0, i));
+            
+            // check that scan fill didn't affect the line or cells below the line
             assertTrue(testFloodFill2.getDungeon().cellIsStone(1, i));
             for (int j = 2; j < 10; j++) {
                 assertTrue(testFloodFill2.getDungeon().cellIsFloor(j, i));
@@ -73,16 +90,20 @@ public class TestFloodFill {
     }
     
     @Test
-    public void testFloodFill2() {
+    public void testForestFire2() {
+        
+        // draw a diagonal line
         for (int i = 0; i < 10; i++) {
             testFloodFill1.getDungeon().changeCellToStone(i, i);
         }
         testFloodFill1.forestFire(1, 0, 0, 2);
         
+        // check that forest fire didn't affect the line
         for (int i = 0; i < 10; i++) {
             assertTrue(testFloodFill1.getDungeon().cellIsStone(i, i));
         }
         
+        // check that forest fire found all cells above the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertFalse(testFloodFill1.getDungeon().cellIsFloor(i, j));
@@ -90,21 +111,29 @@ public class TestFloodFill {
             }
         }
         
+        // check that forest fire didn't affect the cells below the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertTrue(testFloodFill1.getDungeon().cellIsFloor(j, i));
             }
         }
+    }
+     
+    @Test
+    public void testScanFill2() {
         
+        // draw a diagonal line
         for (int i = 0; i < 10; i++) {
             testFloodFill2.getDungeon().changeCellToStone(i, i);
         }
         testFloodFill2.scanFill(1, 0, 0, 2);
         
+        // check that scan fill didn't affect the line
         for (int i = 0; i < 10; i++) {
             assertTrue(testFloodFill2.getDungeon().cellIsStone(i, i));
         }
         
+        // check that scan fill found all cells above the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertFalse(testFloodFill2.getDungeon().cellIsFloor(i, j));
@@ -112,6 +141,7 @@ public class TestFloodFill {
             }
         }
         
+        // check that scan fill didn't affect the cells below the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertTrue(testFloodFill2.getDungeon().cellIsFloor(j, i));
@@ -121,16 +151,20 @@ public class TestFloodFill {
     }
     
     @Test
-    public void testFloodFill3() {
+    public void testForestFire3() {
+        
+        // draw a diagonal line
         for (int i = 0; i < 10; i++) {
             testFloodFill1.getDungeon().changeCellToStone(i, i);
         }
         testFloodFill1.forestFire(5, 4, 0, 2);
         
+        // check that forest fire didn't affect the line
         for (int i = 0; i < 10; i++) {
             assertTrue(testFloodFill1.getDungeon().cellIsStone(i, i));
         }
         
+        // check that forest fire found all cells below the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertFalse(testFloodFill1.getDungeon().cellIsFloor(i, j));
@@ -138,21 +172,28 @@ public class TestFloodFill {
             }
         }
         
+        // check that forest fire didn't affect the cells above the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertTrue(testFloodFill1.getDungeon().cellIsFloor(j, i));
             }
         }
-        
-         for (int i = 0; i < 10; i++) {
+    }
+    
+    @Test
+    public void testScanFill3() {
+        // draw a diagonal line
+        for (int i = 0; i < 10; i++) {
             testFloodFill2.getDungeon().changeCellToStone(i, i);
         }
         testFloodFill2.scanFill(5, 4, 0, 2);
         
+        // check that scan fill didn't affect the line
         for (int i = 0; i < 10; i++) {
             assertTrue(testFloodFill2.getDungeon().cellIsStone(i, i));
         }
         
+        // check that scan fill found all the cells below the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertFalse(testFloodFill2.getDungeon().cellIsFloor(i, j));
@@ -160,16 +201,16 @@ public class TestFloodFill {
             }
         }
         
+        // check that scan fill didn't affect the cells above the line
         for (int i = 1; i < 10; i++) {
             for (int j = 0; j < i-1; j++) {
                 assertTrue(testFloodFill2.getDungeon().cellIsFloor(j, i));
             }
         }
-        
     }
     
     @Test
-    public void testFindLargestArea() {
+    public void testFindLargestAreaForForestFire1() {
         for (int i = 0; i < 10; i++) {
             testFloodFill1.getDungeon().changeCellToStone(1, i);
         }
@@ -181,7 +222,10 @@ public class TestFloodFill {
                 assertEquals(3, testFloodFill1.getDungeon().getCell(j, i));
             }
         }
-        
+    }
+    
+    @Test
+    public void testFindLargestAreaForScanFill1() {    
         for (int i = 0; i < 10; i++) {
             testFloodFill2.getDungeon().changeCellToStone(1, i);
         }
@@ -196,7 +240,7 @@ public class TestFloodFill {
     }
     
     @Test
-    public void testFindLargestArea2() {
+    public void testFindLargestAreaForForestFire2() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 testFloodFill1.getDungeon().changeCellToStone(i, j);
@@ -208,7 +252,10 @@ public class TestFloodFill {
                 assertTrue(testFloodFill1.getDungeon().cellIsStone(i, j));
             }
         }
-        
+    }
+    
+    @Test
+    public void testFindLargestAreaForScanFill2() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 testFloodFill2.getDungeon().changeCellToStone(i, j);
@@ -223,7 +270,7 @@ public class TestFloodFill {
     }
     
     @Test
-    public void testFindLargetArea3() {
+    public void testFindLargestAreaForForestFire3() {
         for (int i = 0; i < 10; i++) {
             testFloodFill1.getDungeon().changeCellToStone(6, i);
         }
@@ -235,8 +282,11 @@ public class TestFloodFill {
             for (int j = 7; j < 10; j++) {
                 assertTrue(testFloodFill1.getDungeon().cellIsStone(j, i));
             }
-        }
-        
+        }   
+    }
+    
+    @Test
+    public void testFindLargestAreaForScanFill3() {
         for (int i = 0; i < 10; i++) {
             testFloodFill2.getDungeon().changeCellToStone(6, i);
         }

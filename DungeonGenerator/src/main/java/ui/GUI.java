@@ -10,9 +10,11 @@ import domain.CellularAutomaton;
 import domain.Dungeon;
 import domain.FloodFill;
 import domain.RandomWalk;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,10 +24,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -57,8 +57,7 @@ public class GUI extends Application {
     public void start(Stage stage) {        
         stage.setTitle("Dungeon generator");
         
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER);
+        VBox box = getVBox();
         Button cellular = new Button("Cellular automaton");
         Button walk = new Button("Random walk");
         Button performanceTest = new Button("Performance testing");        
@@ -76,9 +75,9 @@ public class GUI extends Application {
         });
         
         
-        hbox.getChildren().addAll(cellular, walk, performanceTest);
+        box.getChildren().addAll(cellular, walk, performanceTest);
 
-        Scene scene = new Scene(hbox, 1200, 800);
+        Scene scene = new Scene(box, 1200, 800);
         stage.setScene(scene);
         stage.show();
         
@@ -109,16 +108,15 @@ public class GUI extends Application {
         
         border.setTop(mainMenu);
         
-        VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10));
-        
+        VBox box = getVBox();
+
         Button startAutomaton = new Button("Start cellular automaton");
         Button resetAutomaton = new Button("Reset automaton");
         Button cleanUp = new Button("Clean up");
         Button floodFill = new Button("Flood fill");
         
-        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, iterationLabel, iterationSpinner, stoneLabel, stonePercentSpinner, floodFillChoiceLabel, cb, createAutomaton);
+        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, iterationLabel, iterationSpinner, 
+                stoneLabel, stonePercentSpinner, floodFillChoiceLabel, cb, createAutomaton);
         border.setCenter(box);
         
         createAutomaton.setOnAction(e -> {
@@ -194,9 +192,8 @@ public class GUI extends Application {
         
         border.setTop(mainMenu);
         
-        VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10));
+        VBox box = getVBox();
+
         Button startRandom = new Button("Start random walk");
         Button resetRandom = new Button("Reset random walk");
         Button cleanUp = new Button("Clean up");
@@ -205,7 +202,8 @@ public class GUI extends Application {
         border.setCenter(box);
 
         
-        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, spawnLabel, spawnSpinner, digLabel, digSpinner, turnLabel, turnSpinner, complexBox, floodFillChoiceLabel, cb, createWalk);
+        box.getChildren().addAll(widthLabel, widthSpinner, heightLabel, heightSpinner, spawnLabel, spawnSpinner, 
+                digLabel, digSpinner, turnLabel, turnSpinner, complexBox, floodFillChoiceLabel, cb, createWalk);
         
         createWalk.setOnAction(e -> {
             int width = (int) widthSpinner.getValue();
@@ -227,11 +225,7 @@ public class GUI extends Application {
         });      
                                                 
         startRandom.setOnAction(e -> {
-            if (this.walk.getUseComplexWalk()) {
-                this.walk.runComplexWalk();
-            } else {
-                this.walk.runSimpleWalk();
-            }
+            this.walk.runRandomWalk();
             drawDungeon(this.walk.getDungeon());
         });
         
@@ -258,9 +252,8 @@ public class GUI extends Application {
     private void performanceTestView(Stage stage) {
         Button generationTest = new Button("Dungeon generation performance tests");
         Button fillTest = new Button("Flood fill performance tests");
-        HBox box = new HBox();
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10));
+        VBox box = getVBox();
+
         box.getChildren().addAll(generationTest, fillTest);
         
         BorderPane border = new BorderPane();
@@ -291,14 +284,12 @@ public class GUI extends Application {
     private void generationTestView(Stage stage) {
         Label averageLabel = new Label("How many runs to average");
         Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
-        Label maximumLabel = new Label("Dungeon's maximum height and width (note that value 10 means that dungeon will be 10*10=100 cells");
-        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(10, 100, 1000, 10000));
-        cb.setValue(100);
+        Label maximumLabel = new Label("Dungeon's maximum size in cells");
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(100, 1000, 10000, 100000, 1000000, 10000000));
+        cb.setValue(1000);
         Button beginButton = new Button("Begin performance test");
         
-        VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10));
+        VBox box = getVBox();
         
         BorderPane border = new BorderPane();
         border.setPadding(new Insets(10));
@@ -314,39 +305,90 @@ public class GUI extends Application {
         
         
         box.getChildren().addAll(averageLabel, averageSpinner, maximumLabel, cb, beginButton);
-        ListView<String> listView = new ListView<String>();
-        ObservableList<String> results = FXCollections.observableArrayList();
         Button restart = new Button("Restart performance test");
         
         beginButton.setOnAction(e -> {
-            int average = (int) averageSpinner.getValue();
-            int maximum = (int) cb.getValue();
-            int i = 1;
-            while (i < maximum) {
-                i *= 10;
-                long automatonTime = 0;
-                long walkTimeSimple = 0;
-                long startTime = 0;
-                long endTime = 0;
-                for (int j = 0; j < average; j++) {
-                    this.automaton = new CellularAutomaton(4, i, i, 50);
-                    startTime = System.nanoTime();
-                    this.automaton.initializeDungeon();
-                    this.automaton.runAutomaton();
-                    endTime = System.nanoTime();
-                    automatonTime += (endTime - startTime);
-                    this.walk = new RandomWalk(i, i, 4, 50, 0, false);
-                    startTime = System.nanoTime();
-                    this.walk.runSimpleWalk();
-                    endTime = System.nanoTime();
-                    walkTimeSimple += (endTime - startTime);
+            Label resultLabel = new Label();
+            try (FileWriter writer = new FileWriter(new File("Test Results/Generation performance test results.csv"), true)) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Run on: " + java.time.LocalDate.now() + " at: " + java.time.LocalTime.now());
+                sb.append("\n");
+                sb.append("Algorithm,");
+                sb.append("Dimension,");
+                sb.append("Average time,");
+                sb.append("\n");
+                int average = (int) averageSpinner.getValue();
+                int maximum = (int) cb.getValue();
+                int x = 1;
+                int y = 10;
+                while (true) {
+                    x *= 10;
+                    long automatonTime = 0;
+                    long walkTimeSimple = 0;
+                    long startTime = 0;
+                    long endTime = 0;
+                    for (int j = 0; j < average; j++) {
+                        this.automaton = new CellularAutomaton(4, y, x, 50);
+                        startTime = System.nanoTime();
+                        this.automaton.initializeDungeon();
+                        this.automaton.runAutomaton();
+                        endTime = System.nanoTime();
+                        automatonTime += (endTime - startTime);
+                        this.walk = new RandomWalk(y, x, 4, 50, 0, false);
+                        startTime = System.nanoTime();
+                        this.walk.runRandomWalk();
+                        endTime = System.nanoTime();
+                        walkTimeSimple += (endTime - startTime);
+                    }
+                    sb.append("Cellular automaton,");
+                    sb.append(x*y + ",");
+                    sb.append(automatonTime / average + ",");
+                    sb.append("\n");
+                    sb.append("Random walk,");
+                    sb.append(x*y + ",");
+                    sb.append(walkTimeSimple / average + ",");
+                    sb.append("\n");
+
+                    if (x * y >= maximum) {
+                        break;
+                    }
+
+                    y *= 10;
+                    for (int j = 0; j < average; j++) {
+                        this.automaton = new CellularAutomaton(4, y, x, 50);
+                        startTime = System.nanoTime();
+                        this.automaton.initializeDungeon();
+                        this.automaton.runAutomaton();
+                        endTime = System.nanoTime();
+                        automatonTime += (endTime - startTime);
+                        this.walk = new RandomWalk(y, x, 4, 50, 0, false);
+                        startTime = System.nanoTime();
+                        this.walk.runRandomWalk();
+                        endTime = System.nanoTime();
+                        walkTimeSimple += (endTime - startTime);
+                    }
+                    sb.append("Cellular automaton,");
+                    sb.append(x*y + ",");
+                    sb.append(automatonTime / average + ",");
+                    sb.append("\n");
+                    sb.append("Random walk,");
+                    sb.append(x*y + ",");
+                    sb.append(walkTimeSimple / average + ",");
+                    sb.append("\n");
+                
+                    if (x * y >= maximum) {
+                        break;
+                    }
                 }
-                results.add("Cellular automaton with dimension: " + i * i + ", average time: " + automatonTime / average);
-                results.add("Simple random walk with dimension: " + i * i + ", average time: " + walkTimeSimple / average);
+                sb.append("\n");
+                writer.write(sb.toString());
+                resultLabel.setText("Results succesfully written to file!");
+            } catch (IOException ex) {
+                resultLabel.setText("Exception: " + ex);
             }
-            listView.setItems(results);
+            
             box.getChildren().clear();
-            box.getChildren().addAll(listView, restart);
+            box.getChildren().addAll(resultLabel, restart);
         });
         
         restart.setOnAction(e -> {
@@ -365,9 +407,7 @@ public class GUI extends Application {
         Spinner averageSpinner = new Spinner((int) 1, (int) 1000, (int) 100);
         Button beginButton = new Button("Begin performance test");
         
-        VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10));
+        VBox box = getVBox();
         
         BorderPane border = new BorderPane(); 
         border.setPadding(new Insets(10));
@@ -383,38 +423,58 @@ public class GUI extends Application {
         
         
         box.getChildren().addAll(averageLabel, averageSpinner, beginButton);
-        ListView<String> listView = new ListView<String>();
-        ObservableList<String> results = FXCollections.observableArrayList();
         Button restart = new Button("Restart performance test");
         
         beginButton.setOnAction(e -> {
-            int average = (int) averageSpinner.getValue();
-            int i = 1;
-            for (Dungeon d : dungeons) {
-                long forestFireTime = 0;
-                long scanFillTime = 0;
-                long startTime = 0;
-                long endTime = 0;
-                for (int j = 0; j < average; j++) {
-                    FloodFill forestFire = new FloodFill(d, 0);
-                    startTime = System.nanoTime();
-                    forestFire.findLargestConnectedArea();
-                    endTime = System.nanoTime();
-                    forestFireTime += (endTime - startTime);
-                    FloodFill scanFill = new FloodFill(d, 1);
-                    startTime = System.nanoTime();
-                    scanFill.findLargestConnectedArea();
-                    endTime = System.nanoTime();
-                    scanFillTime += (endTime - startTime);
+            Label resultLabel = new Label();
+            try (FileWriter writer = new FileWriter(new File("Test Results/Flood fill performance test results.csv"), true)) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Run on: " + java.time.LocalDate.now() + " at: " + java.time.LocalTime.now());
+                sb.append("\n");
+                sb.append("Algorithm,");
+                sb.append("Dungeon Nr.,");
+                sb.append("Average time,");
+                sb.append("\n");
+                int average = (int) averageSpinner.getValue();
+                int i = 1;
+                for (Dungeon d : dungeons) {
+                    long forestFireTime = 0;
+                    long scanFillTime = 0;
+                    long startTime = 0;
+                    long endTime = 0;
+                    for (int j = 0; j < average; j++) {
+                        FloodFill forestFire = new FloodFill(d, 0);
+                        startTime = System.nanoTime();
+                        forestFire.findLargestConnectedArea();
+                        endTime = System.nanoTime();
+                        forestFireTime += (endTime - startTime);
+                        FloodFill scanFill = new FloodFill(d, 1);
+                        startTime = System.nanoTime();
+                        scanFill.findLargestConnectedArea();
+                        endTime = System.nanoTime();
+                        scanFillTime += (endTime - startTime);
+                    }
+                    
+                    sb.append("Forest fire,");
+                    sb.append(i + ",");
+                    sb.append(forestFireTime / average + ",");
+                    sb.append("\n");
+                    sb.append("Scan fill,");
+                    sb.append(i + ",");
+                    sb.append(scanFillTime / average + ",");
+                    sb.append("\n");
+
+                    i++;
                 }
-                results.add("Forest fire for dungeon " + i + ", average time: " + forestFireTime / average);
-                results.add("Scan fill for dungeon " + i + ", average time: " + scanFillTime / average);
-                i++;
+                sb.append("\n");
+                writer.write(sb.toString());
+                resultLabel.setText("Results succesfully written to file!");
+            } catch (IOException ex) {
+                resultLabel.setText("Exception: " + ex);
             }
 
-            listView.setItems(results);
             box.getChildren().clear();
-            box.getChildren().addAll(listView, restart);
+            box.getChildren().addAll(resultLabel, restart);
         });
         
         restart.setOnAction(e -> {
@@ -545,5 +605,12 @@ public class GUI extends Application {
         Dungeon[] dungeons = {dungeon1, dungeon2, dungeon3, dungeon4, dungeon5, dungeon6};
         
         return dungeons;
+    }
+    
+    private VBox getVBox() {
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(10));
+        return box;
     }
 }

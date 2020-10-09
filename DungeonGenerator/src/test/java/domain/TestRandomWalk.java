@@ -13,10 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author timot
- */
+
 public class TestRandomWalk {
     private int digPercent;
     private RandomWalk testRandomWalk;
@@ -24,7 +21,7 @@ public class TestRandomWalk {
     private RandomWalk testRandomWalk3;
     private RandomWalk testRandomWalk4;
     private RandomWalk testRandomWalk5;
-    
+
     public TestRandomWalk() {
     }
 
@@ -49,10 +46,10 @@ public class TestRandomWalk {
     @After
     public void tearDown() {
     }
-    
+
     @Test
-    public void testRunRandomWalk() {
-        testRandomWalk.runSimpleWalk();
+    public void testRunRandomWalk1() {
+        testRandomWalk.runRandomWalk();
         int dugCells = 0;
         int dungeonX = testRandomWalk.getDungeon().getX();
         int dungeonY = testRandomWalk.getDungeon().getY();
@@ -64,11 +61,14 @@ public class TestRandomWalk {
             }
         }
         assertTrue(digPercent <= (100*dugCells/(dungeonX*dungeonY)));
-        
-        testRandomWalk2.runSimpleWalk();
-        dugCells = 0;
-        dungeonX = testRandomWalk2.getDungeon().getX();
-        dungeonY = testRandomWalk2.getDungeon().getY();
+    }
+    
+    @Test
+    public void testRunRandomWalk2() {
+        testRandomWalk2.runRandomWalk();
+        int dugCells = 0;
+        int dungeonX = testRandomWalk2.getDungeon().getX();
+        int dungeonY = testRandomWalk2.getDungeon().getY();
         for (int y = 0; y < dungeonY; y++) {
             for (int x = 0; x < dungeonX; x++) {
                 if (testRandomWalk2.getDungeon().cellIsFloor(y, x)) {
@@ -77,11 +77,14 @@ public class TestRandomWalk {
             }
         }
         assertTrue(digPercent/2 <= (100*dugCells/(dungeonX*dungeonY)));
-        
-        testRandomWalk3.runSimpleWalk();
-        dugCells = 0;
-        dungeonX = testRandomWalk3.getDungeon().getX();
-        dungeonY = testRandomWalk3.getDungeon().getY();
+    }
+    
+    @Test
+    public void testRunRandomWalk3() {
+        testRandomWalk3.runRandomWalk();
+        int dugCells = 0;
+        int dungeonX = testRandomWalk3.getDungeon().getX();
+        int dungeonY = testRandomWalk3.getDungeon().getY();
         for (int y = 0; y < dungeonY; y++) {
             for (int x = 0; x < dungeonX; x++) {
                 if (testRandomWalk3.getDungeon().cellIsFloor(y, x)) {
@@ -90,11 +93,14 @@ public class TestRandomWalk {
             }
         }
         assertTrue(digPercent*2 <= (100*dugCells/(dungeonX*dungeonY)));
-        
-        testRandomWalk4.runComplexWalk();
-        dugCells = 0;
-        dungeonX = testRandomWalk4.getDungeon().getX();
-        dungeonY = testRandomWalk4.getDungeon().getY();
+    }    
+    
+    @Test
+    public void testRunRandomWalk4() {
+        testRandomWalk4.runRandomWalk();
+        int dugCells = 0;
+        int dungeonX = testRandomWalk4.getDungeon().getX();
+        int dungeonY = testRandomWalk4.getDungeon().getY();
         for (int y = 0; y < dungeonY; y++) {
             for (int x = 0; x < dungeonX; x++) {
                 if (testRandomWalk4.getDungeon().cellIsFloor(y, x)) {
@@ -103,11 +109,14 @@ public class TestRandomWalk {
             }
         }
         assertTrue(digPercent <= (100*dugCells/(dungeonX*dungeonY)));
-        
-        testRandomWalk5.runComplexWalk();
-        dugCells = 0;
-        dungeonX = testRandomWalk5.getDungeon().getX();
-        dungeonY = testRandomWalk5.getDungeon().getY();
+    }    
+     
+    @Test
+    public void testRunRandomWalk5() {
+        testRandomWalk5.runRandomWalk();
+        int dugCells = 0;
+        int dungeonX = testRandomWalk5.getDungeon().getX();
+        int dungeonY = testRandomWalk5.getDungeon().getY();
         for (int y = 0; y < dungeonY; y++) {
             for (int x = 0; x < dungeonX; x++) {
                 if (testRandomWalk5.getDungeon().cellIsFloor(y, x)) {

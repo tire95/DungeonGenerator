@@ -15,10 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author timot
- */
 public class TestDungeon {
     
     private Dungeon testDungeon;
@@ -42,7 +38,7 @@ public class TestDungeon {
     @After
     public void tearDown() {
     }
-    
+
     @Test
     public void testNeighborCheck() {
         // check that a cell with no stone neighbors gives 0
@@ -55,13 +51,13 @@ public class TestDungeon {
         // check that a side cell has 3 "stone neighbors"
         assertEquals(3, testDungeon.checkNumberOfStoneNeighbors(0, 2));
     }
-    
+
     @Test
     public void testDimensionGetters() {
         assertEquals(10, testDungeon.getY());
         assertEquals(5, testDungeon.getX());
     }
-    
+
     @Test
     public void testCellChangersAndChecker() {
         assertTrue(testDungeon.cellIsFloor(2, 2));
@@ -87,26 +83,30 @@ public class TestDungeon {
         testDungeon.setGrid(newGrid);
         Assert.assertArrayEquals(newGrid, testDungeon.getGrid());
     }
-    
+
     @Test
-    public void testCleanUp() {
+    public void testCleanUp1() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 testDungeon.changeCellToStone(i, j);
             }
         }
         testDungeon.changeCellToStone(8, 3);
-        
         testDungeon.cleanUp();
         
+        // these cells have enough stone neighbors so they should be unaffected by clean up
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 assertTrue(testDungeon.cellIsStone(i, j));
             }
         }
         
+        // a lone cell should be cleaned up
         assertTrue(testDungeon.cellIsFloor(8, 3));
-        
+    }
+    
+    @Test
+    public void testCleanUp2() {
         testDungeon.setGrid(new int[20][10]);
         for (int i = 8; i < 12; i++) {
             for (int j = 5; j < 7; j++) {
@@ -116,16 +116,24 @@ public class TestDungeon {
         
         testDungeon.changeCellToStone(3, 3);
         
+        testDungeon.changeCellToStone(1, 1);
+        testDungeon.changeCellToStone(1, 2);
+        
         testDungeon.cleanUp();
         
+        // these cells have enough stone neighbors so they should be unaffected by clean up
         for (int i = 8; i < 12; i++) {
             for (int j = 5; j < 7; j++) {
                 assertTrue(testDungeon.cellIsStone(i, j));
             }
         }
         
+        // a lone cell should be cleaned up
         assertTrue(testDungeon.cellIsFloor(3, 3));
         
+        // these cells don't have enough stone neighbors
+        assertTrue(testDungeon.cellIsFloor(1, 1));
+        assertTrue(testDungeon.cellIsFloor(1, 2));
         
     }
     

@@ -8,11 +8,18 @@ Tests for the dungeon generation algorithms are challenging to create as most of
 
 ## Performance testing
 
-The user has an option to run performance testing for both dungeon generation and flood filling once the program is executed. 
+The user has an option to run performance testing for both dungeon generation and flood filling once the program is executed. The results are written to .csv files located in `\DungeonGenerator\Test Results`.
 
-For dungeon generation, the user can choose how many runs will be averaged, and what the maximum size of the dungeon is. The results are displayed in an array.
+### Dungeon generation
 
-For flood fill generation, the user can choose how many runs will be averaged. A few different test patterns are implemented and shown below. The results are displayed in an array.
+For dungeon generation, the user can choose how many runs will be averaged, and what the maximum size of the dungeon is.
+
+Cellular automata are made to run with 4 iterations and initial stone percentage of 50. Random walks are made to run with dig percentage of 50, spawn chance for a new walker of 4%, and simple walk algorithm. The choice to use simple walk was due to higher complexity of complex walk brought by yet another parameter (turn chance). Also, in most cases, simple walk performs clearly better, so it is more fruitful to compare two quick algorithms than one quick and one slow algorithm.
+
+
+### Flood fill
+
+For flood fill, the user can choose how many runs will be averaged. A few different test patterns are implemented and shown below.
 
 #### Dungeon 1
 

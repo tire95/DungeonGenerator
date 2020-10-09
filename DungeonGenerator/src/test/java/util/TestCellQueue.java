@@ -15,10 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- *
- * @author timot
- */
 public class TestCellQueue {
     private CellQueue testCellQueue;
     
@@ -44,7 +40,7 @@ public class TestCellQueue {
     @After
     public void tearDown() {
     }
-    
+
     @Test
     public void testDequeue() {
         for (int i = 0; i < 8; i++) {
@@ -57,7 +53,7 @@ public class TestCellQueue {
         assertEquals(0, this.testCellQueue.size());
         assertTrue(this.testCellQueue.isEmpty());
     }
-    
+
     @Test
     public void testEnqueue() {
         this.testCellQueue.enqueue(new Cell(10, 10));
@@ -72,7 +68,7 @@ public class TestCellQueue {
         assertEquals(0, this.testCellQueue.size());
 
     }
-    
+
     @Test
     public void testGrowQueue() {
         for (int i = 0; i < 5; i++) {
