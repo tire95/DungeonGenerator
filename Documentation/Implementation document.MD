@@ -115,3 +115,11 @@ The time and space complexities are the same as with the forest fire algorithm (
 - `GUI.java` is bloated and needs cleaning up
 - Cellular automaton's `initializeDungeon` could be improved with adding all the cells to a list, randomizing the order, and from the beginning start changing the cells to stone
 - The project uses `ThreadLocalRandom` for RNG as performance with a self-made pseudorandom number generator would be too slow
+
+## Sources
+
+1. [Wikipedia, *Cellular automaton*](https://en.wikipedia.org/wiki/Cellular_automaton)
+2. [Johnson, L. *et.al.*, *Cellular automata for real-time generationof infinite cave levels*](http://julian.togelius.com/Johnson2010Cellular.pdf)
+3. [Wikipedia, *Random walk*](https://en.wikipedia.org/wiki/Random_walk)
+4. [Noel Berry, *Procedural Generation - The Caves*](http://noelberry.ca/#thecaves)
+5. [Wikipedia, *Flood fill*](https://en.wikipedia.org/wiki/Flood_fill)

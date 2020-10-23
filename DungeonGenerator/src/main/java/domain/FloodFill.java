@@ -107,19 +107,31 @@ public class FloodFill {
                 rightX++;
             }
             
+            boolean upperStartFound = false;
+            boolean lowerStartFound = false;
             // change all cells between leftX and rightX to replacement
             for (int i = leftX; i <= rightX; i++) {
                 this.dungeon.setCell(yCoord, i, replacement);
                 changedCells++;
                 
-                // if the cell below is of target integer, add it to the queue
-                if ((yCoord + 1 < this.dungeon.getY()) && this.dungeon.getCell(yCoord + 1, i) == target) {
-                    this.cells.enqueue(new Cell(yCoord + 1, i));
+                // check if the cell below is in dungeon
+                if (yCoord + 1 < this.dungeon.getY()) {
+                    if (this.dungeon.getCell(yCoord + 1, i) == target && !lowerStartFound) {
+                        lowerStartFound = true;
+                        this.cells.enqueue(new Cell(yCoord + 1, i));
+                    } else if (this.dungeon.cellIsStone(yCoord + 1, i)) {   // check if there is a break in the line (i.e. rock separates two areas)
+                        lowerStartFound = false;
+                    }
                 }
                 
-                // if the cell above is of target integer, add it to the queue
-                if ((yCoord - 1 >= 0) && this.dungeon.getCell(yCoord - 1, i) == target) {
-                    this.cells.enqueue(new Cell(yCoord - 1, i));
+                // check if the cell above is in dungeon
+                if (yCoord - 1 >= 0) {
+                    if (this.dungeon.getCell(yCoord - 1, i) == target && !upperStartFound) {
+                        upperStartFound = true;
+                        this.cells.enqueue(new Cell(yCoord - 1, i));
+                    } else if (this.dungeon.cellIsStone(yCoord - 1, i)) {   // check if there is a break in the line (i.e. rock separates two areas)
+                        upperStartFound = false;
+                    }
                 }
             }
             
@@ -133,7 +145,16 @@ public class FloodFill {
     public void findLargestConnectedArea() {
         Cell largestAreaStart = null;
         int largestAreaCells = 0;
-        
+        int remainingFloorCells = 0;
+        for (int y = 0; y < this.dungeon.getY(); y++) {
+            for (int x = 0; x < this.dungeon.getX(); x++) {
+                if (this.dungeon.cellIsFloor(y, x)) {
+                    remainingFloorCells++;
+                }
+            }
+        }
+
+        loop:
         for (int y = 0; y < this.dungeon.getY(); y++) {
             for (int x = 0; x < this.dungeon.getX(); x++) {
                 if (this.dungeon.cellIsFloor(y, x)) {
@@ -146,6 +167,10 @@ public class FloodFill {
                     if (cells > largestAreaCells) {
                         largestAreaCells = cells;
                         largestAreaStart = new Cell(y, x);
+                    }
+                    remainingFloorCells -= cells;
+                    if ((remainingFloorCells == 0) || (remainingFloorCells < largestAreaCells)) {
+                        break loop;
                     }
                 }
             }

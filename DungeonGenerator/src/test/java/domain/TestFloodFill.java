@@ -227,13 +227,14 @@ public class TestFloodFill {
     @Test
     public void testFindLargestAreaForScanFill1() {    
         for (int i = 0; i < 10; i++) {
-            testFloodFill2.getDungeon().changeCellToStone(1, i);
+            testFloodFill2.getDungeon().changeCellToStone(2, i);
         }
         testFloodFill2.findLargestConnectedArea();
         for (int i = 0; i < 10; i++) {
-            assertTrue(testFloodFill2.getDungeon().cellIsStone(0, i));
-            assertTrue(testFloodFill2.getDungeon().cellIsStone(1, i));
-            for (int j = 2; j < 10; j++) {
+            for (int j = 0; j < 3; j++) {
+                assertTrue(testFloodFill2.getDungeon().cellIsStone(j, i));
+            }
+            for (int j = 3; j < 10; j++) {
                 assertEquals(3, testFloodFill2.getDungeon().getCell(j, i));
             }
         }

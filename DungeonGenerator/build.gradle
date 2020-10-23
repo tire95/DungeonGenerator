@@ -8,10 +8,14 @@ plugins {
     id 'jacoco'
     
     id 'checkstyle'
+    
 }
 
+sourceCompatibility = '1.11'
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+
 
 // NetBeans will automatically add "run" and "debug" tasks relying on the
 // "mainClass" property. You may however define the property prior executing
@@ -22,10 +26,10 @@ sourceCompatibility = '1.8'
 // your own implementation.
 application {
     // Define the main class for the application
-    mainClassName = 'ui.GUI'
+    mainClassName = 'ui.Main'
 }
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'ui.GUI'
+    ext.mainClass = 'ui.Main'
 }
 
 repositories {
@@ -53,7 +57,7 @@ jacocoTestReport {
     afterEvaluate {
         getClassDirectories().setFrom(classDirectories.files.collect {
                 fileTree(dir: it,
-                    exclude: ['**/ui/**'])
+                    exclude: ['**/ui/**', '**/testing/**'])
         })
     }
 }
@@ -65,3 +69,13 @@ run {
 }
 
 check.dependsOn jacocoTestReport
+
+jar {
+    manifest {
+        attributes "Main-Class": "ui.Main"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

@@ -28,6 +28,23 @@ public class Dungeon {
     }
     
     /**
+     * Deep clone constructor
+     * @param y dungeon's height
+     * @param x dungeon's width
+     * @param copy grid for the dungeon
+     */
+    public Dungeon(int y, int x, int[][] copy) {
+        this.x = x;
+        this.y = y;
+        this.grid = new int[y][x];
+        for (int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++) {
+                this.grid[i][j] = copy[i][j];
+            }
+        }
+    }
+    
+    /**
      * Return x i.e. width of dungeon
      * @return x
      */

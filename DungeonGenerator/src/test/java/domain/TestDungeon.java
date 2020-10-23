@@ -137,4 +137,13 @@ public class TestDungeon {
         
     }
     
+    @Test
+    public void testDeepClone() {
+        testDungeon.changeCellToStone(0, 0);
+        Dungeon copy = new Dungeon(testDungeon.getY(), testDungeon.getX(), testDungeon.getGrid());
+        testDungeon.setGrid(new int[5][5]);
+        assertFalse(testDungeon.getGrid().equals(copy.getGrid()));
+        assertFalse(testDungeon.getCell(0, 0) == copy.getCell(0, 0));
+    }
+    
 }
