@@ -48,7 +48,7 @@ Below is a table and a graphical representation of the test results. For this te
 | 640000    | 13948154          | 45046746          | 96863502          | 1.78E+08          | 2.96E+08          | 4.71E+08          |
 | 1000000   | 22064320          | 71653298          | 1.55E+08          | 2.84E+08          | 4.77E+08          | 7.61E+08          |
 
-![Dig percent testing](/Documentation/Pictures/Random walk dig plot.png)
+![Dig percent testing](/Documentation/Pictures/Random-walk-dig-plot.png)
 
 We can see that as the dig percent increases, the average time to run increases. This is understandable, as walkers need to find more cells to dig. The non-linearity is explained with the RNG nature of the algorithm; with walkers randomly choosing their directions, it is inevitable that they end up walking to a floor cell.
 
@@ -72,7 +72,7 @@ Below is a table and a graphical representation of the test results. For this te
 | 640000    | 57946936           | 1.18E+08           | 1.87E+08           | 2.64E+08           | 3.53E+08           | 4.54E+08           |
 | 1000000   | 92519584           | 1.88E+08           | 2.95E+08           | 4.17E+08           | 5.55E+08           | 7.14E+08           |
 
-![Spawn chance testing](/Documentation/Pictures/Random walk spawn plot.png)
+![Spawn chance testing](/Documentation/Pictures/Random-walk-spawn-plot.png)
 
 We can see that as the spawn chance increases, the average time to run increases. This is explained with a higher chance of a walker walking into a floor cell.
 
@@ -102,7 +102,7 @@ Below is a table and a graphical representation of the test results. For this te
 | 3240000   | 4.79E+08           | 5.49E+08    |
 | 4000000   | 5.96E+08           | 6.83E+08    |
 
-![Generation testing](/Documentation/Pictures/Generation plot.png)
+![Generation testing](/Documentation/Pictures/Generation-plot.png)
 
 We can see that with small dungeon sizes, random walk performs slightly faster as the algorithm doesn't have to go through the whole dungeon. However, as the dungeon's size increases, cellular automaton begins to perform faster as walkers have a higher chance of walking into floor cells.
 
@@ -134,7 +134,7 @@ Below is a table and a graphical representation of the test results.
 | 3240000   | 1.25E+08                           | 51226434                           | 35053936                           |
 | 4000000   | 1.58E+08                           | 63600902                           | 42680411                           |
 
-![Generation testing](/Documentation/Pictures/Forest fire plot.png)
+![Generation testing](/Documentation/Pictures/Forest-fire-plot.png)
 
 We can see that the time to run decreases as the initial stone percent increases because the connected areas become smaller. With smaller areas, the largest area is found faster (#2 of complexity analysis, see "Implementation document") and it is filled faster (#3 of complexity analysis, see "Implementation document").
 
@@ -160,7 +160,7 @@ Below is a table and a graphical representation of the test results.
 | 3240000   | 67705735                         | 33161290                         | 24413481                         |
 | 4000000   | 83419986                         | 40727818                         | 30942081                         |
 
-![Generation testing](/Documentation/Pictures/Scan fill plot.png)
+![Generation testing](/Documentation/Pictures/Scan-fill-plot.png)
 
 We can see that the time to run decreases as the initial stone percent increases because the connected areas become smaller. With smaller areas, the largest area is found faster (#2 of complexity analysis, see "Implementation document") and it is filled faster (#3 of complexity analysis, see "Implementation document").
 
@@ -186,7 +186,7 @@ Below are tables and graphical representations for the test results. The initial
 | 3240000   | 1.25E+08    | 67705735  |
 | 4000000   | 1.58E+08    | 83419986  |
 
-![Generation testing](/Documentation/Pictures/Flood fill plot 45.png)
+![Generation testing](/Documentation/Pictures/Flood-fill-plot-45.png)
 
 | Dimension | Forest fire | Scan fill |
 |-----------|-------------|-----------|
@@ -206,7 +206,7 @@ Below are tables and graphical representations for the test results. The initial
 | 3240000   | 51226434    | 33161290  |
 | 4000000   | 63600902    | 40727818  |
 
-![Generation testing](/Documentation/Pictures/Flood fill plot 50.png)
+![Generation testing](/Documentation/Pictures/Flood-fill-plot-50.png)
 
 | Dimension | Forest fire | Scan fill |
 |-----------|-------------|-----------|
@@ -226,7 +226,7 @@ Below are tables and graphical representations for the test results. The initial
 | 3240000   | 35053936    | 24413481  |
 | 4000000   | 42680411    | 30942081  |
 
-![Generation testing](/Documentation/Pictures/Flood fill plot 55.png)
+![Generation testing](/Documentation/Pictures/Flood-fill-plot-55.png)
 
 We can see that scan fill performs faster in all the cases as it examines a line of cells at one step instead of a singular cell, and only cells that start a line are added to the queue.
 
