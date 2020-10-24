@@ -15,7 +15,7 @@ Below are a few images of what kind of dungeons can be created with the two diff
 
 ![dungeons](/Documentation/Pictures/Example-dungeons.png)
 
-[User guide}(https://github.com/tire95/DungeonGenerator/blob/master/Documentation/User%20guide.MD)
+[User guide](https://github.com/tire95/DungeonGenerator/blob/master/Documentation/User%20guide.MD)
 
 [Implementation document](https://github.com/tire95/DungeonGenerator/blob/master/Documentation/Implementation%20document.MD)
 
