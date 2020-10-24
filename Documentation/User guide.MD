@@ -4,9 +4,9 @@
 
 1. Make sure you have Java 11 installed
 2. (Optional) Make sure you have Gradle installed
-2. Download the latest release
-3. a) Run the jar by double-clicking it or
-3. b) In terminal, navigate to the `DungeonGenerator` folder and execute command `gradle run`
+3. Download the latest release
+4. Run the jar by double-clicking it or
+5. In terminal, navigate to the `DungeonGenerator` folder and execute command `gradle run`
 
 ## Running the program
 
