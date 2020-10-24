@@ -3,32 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package util;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import domain.Cell;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Test class for cellQueue
+ * @author timot
+ */
 public class TestCellQueue {
     private CellQueue testCellQueue;
     
+    /**
+     *
+     */
     public TestCellQueue() {
     }
 
+    /**
+     *
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     *
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         this.testCellQueue = new CellQueue(10);
@@ -37,15 +55,21 @@ public class TestCellQueue {
         }
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testDequeue() {
         for (int i = 0; i < 8; i++) {
             assertFalse(this.testCellQueue.isEmpty());
-            assertEquals(8-i, this.testCellQueue.size());
+            assertEquals(8 - i, this.testCellQueue.size());
             Cell next = this.testCellQueue.dequeue();
             assertEquals(i, next.getCurrentX());
             assertEquals(i, next.getCurrentY());
@@ -54,6 +78,9 @@ public class TestCellQueue {
         assertTrue(this.testCellQueue.isEmpty());
     }
 
+    /**
+     *
+     */
     @Test
     public void testEnqueue() {
         this.testCellQueue.enqueue(new Cell(10, 10));
@@ -69,6 +96,9 @@ public class TestCellQueue {
 
     }
 
+    /**
+     *
+     */
     @Test
     public void testGrowQueue() {
         for (int i = 0; i < 5; i++) {
@@ -106,6 +136,9 @@ public class TestCellQueue {
         }
     }
     
+    /**
+     *
+     */
     @Test
     public void testReduceQueue() {
         for (int i = 0; i < 20; i++) {

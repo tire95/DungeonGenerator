@@ -6,40 +6,63 @@
 
 package domain;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Test class for cellular automaton
+ * @author timot
+ */
 public class TestCellularAutomaton {
     private CellularAutomaton testCellular;
     private CellularAutomaton testCellular2;
 
+    /**
+     *
+     */
     public TestCellularAutomaton() {
     }
 
+    /**
+     *
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     *
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Create automatons for testing
+     */
     @Before
     public void setUp() {
         testCellular = new CellularAutomaton(2, 3, 5, 30);
         testCellular2 = new CellularAutomaton(15, 20, 30, 70);
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testInitializeDungeonForCellular1() {
         testCellular.initializeDungeon();
@@ -53,9 +76,12 @@ public class TestCellularAutomaton {
                 }
             }
         }
-        assertTrue(testCellular.getStonePercent() <= 100*changedCells/(dungeonX*dungeonY));
+        assertTrue(testCellular.getStonePercent() <= 100 * changedCells / (dungeonX * dungeonY));
     }
     
+    /**
+     *
+     */
     @Test
     public void testInitializeDungeonForCellular2() {
         testCellular2.initializeDungeon();
@@ -69,14 +95,20 @@ public class TestCellularAutomaton {
                 }
             }
         }
-        assertTrue(testCellular2.getStonePercent() <= 100*changedCells/(dungeonX*dungeonY));
+        assertTrue(testCellular2.getStonePercent() <= 100 * changedCells / (dungeonX * dungeonY));
     }
     
+    /**
+     *
+     */
     @Test
     public void testGetIterations() {
         assertEquals(2, testCellular.getIterations());
     }
     
+    /**
+     *
+     */
     @Test
     public void testResetForCellular1() {
         testCellular.initializeDungeon();
@@ -90,6 +122,9 @@ public class TestCellularAutomaton {
         }
     }
     
+    /**
+     *
+     */
     @Test
     public void testResetForCellular2() {
         testCellular2.initializeDungeon();
@@ -103,6 +138,9 @@ public class TestCellularAutomaton {
         }
     }
     
+    /**
+     *
+     */
     @Test
     public void testRunAutomaton() {
         int dungeonY = testCellular.getDungeon().getY();

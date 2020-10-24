@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 
-package ui;
+package main;
+
+import ui.GUI;
 
 /**
- *
+ * Main class
  * @author timot
  */
 public class Main {

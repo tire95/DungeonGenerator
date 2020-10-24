@@ -26,7 +26,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import testing.PerformanceTests;
+import tests.PerformanceTests;
 
 /**
  * Graphical user interface
@@ -57,6 +57,8 @@ public class GUI extends Application {
         stage.setTitle("Dungeon generator");
         
         VBox box = getVBox();
+        
+        Label infoLabel = new Label("Please read the README and the USER GUIDE before continuing");
         Button cellular = new Button("Cellular automaton");
         Button walk = new Button("Random walk");
         Button performanceTest = new Button("Performance testing");        
@@ -74,7 +76,7 @@ public class GUI extends Application {
         });
         
         
-        box.getChildren().addAll(cellular, walk, performanceTest);
+        box.getChildren().addAll(infoLabel, cellular, walk, performanceTest);
 
         Scene scene = new Scene(box, 1200, 800);
         stage.setScene(scene);
@@ -250,10 +252,12 @@ public class GUI extends Application {
     
     private void performanceTestView(Stage stage) {
         Button generationTest = new Button("Dungeon generation performance tests");
+        Button walkSpawnTest = new Button("Random walk performance tests for spawn chance");
+        Button walkDigTest = new Button("Random walk performance tests for dig percent");
         Button fillTest = new Button("Flood fill performance tests");
         VBox box = getVBox();
 
-        box.getChildren().addAll(generationTest, fillTest);
+        box.getChildren().addAll(walkSpawnTest, walkDigTest, generationTest, fillTest);
         
         BorderPane border = new BorderPane();
         border.setPadding(new Insets(10));
@@ -269,6 +273,14 @@ public class GUI extends Application {
             generationTestView(stage);
         });
         
+        walkSpawnTest.setOnAction(e -> {
+            walkSpawnTestView(stage);
+        });
+        
+        walkDigTest.setOnAction(e -> {
+            walkDigTestView(stage);
+        });
+        
         fillTest.setOnAction(e -> {
             fillTestView(stage);
         });
@@ -281,6 +293,14 @@ public class GUI extends Application {
     }
     
     private void generationTestView(Stage stage) {
+        Label iterationLabel = new Label("Cellular automaton's iterations");
+        Spinner iterationSpinner = new Spinner((int) 1, (int) 10, (int) 4);
+        Label stoneLabel = new Label("Cellular automaton's stone percent at start");
+        Spinner stonePercentSpinner = new Spinner((int) 1, (int) 100, (int) 45);
+        Label spawnLabel = new Label("Random walk's spawn chance for new walker");
+        Spinner spawnSpinner = new Spinner((int) 1, (int) 100, (int) 2);
+        Label digLabel = new Label("Random walk's dig percent");
+        Spinner digSpinner = new Spinner((int) 1, (int) 100, (int) 45);
         Label averageLabel = new Label("How many runs to average");
         Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
         Label maximumLabel = new Label("Dungeon's maximum size in cells");
@@ -303,14 +323,18 @@ public class GUI extends Application {
         border.setCenter(box);
         
         
-        box.getChildren().addAll(averageLabel, averageSpinner, maximumLabel, cb, beginButton);
+        box.getChildren().addAll(iterationLabel, iterationSpinner, stoneLabel, stonePercentSpinner, spawnLabel, spawnSpinner, digLabel, digSpinner, averageLabel, averageSpinner, maximumLabel, cb, beginButton);
         Button restart = new Button("Back to test menu");
         
         beginButton.setOnAction(e -> {
             Label resultLabel = new Label();
+            int iterations = (int) iterationSpinner.getValue();
+            int stonePercent = (int) stonePercentSpinner.getValue();
+            int spawnChance = (int) spawnSpinner.getValue();
+            int digPercent = (int) digSpinner.getValue();
             int average = (int) averageSpinner.getValue();
             int maximum = (int) cb.getValue();
-            if (this.performanceTests.generationPerformanceTests(average, maximum)) {
+            if (this.performanceTests.generationPerformanceTests(iterations, stonePercent, spawnChance, digPercent, average, maximum)) {
                 resultLabel.setText("Results succesfully written to file!");
             } else {
                 resultLabel.setText("File not found");
@@ -330,6 +354,10 @@ public class GUI extends Application {
     }
     
     private void fillTestView(Stage stage) {
+        Label iterationLabel = new Label("Cellular automaton's iterations");
+        Spinner iterationSpinner = new Spinner((int) 1, (int) 10, (int) 4);
+        Label stoneLabel = new Label("Cellular automaton's stone percent at start");
+        Spinner stonePercentSpinner = new Spinner((int) 1, (int) 100, (int) 45);
         Label averageLabel = new Label("How many runs to average");
         Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
         Label maximumLabel = new Label("Dungeon's maximum size in cells");
@@ -352,14 +380,118 @@ public class GUI extends Application {
         border.setCenter(box);
         
         
-        box.getChildren().addAll(averageLabel, averageSpinner, maximumLabel, cb, beginButton);
+        box.getChildren().addAll(iterationLabel, iterationSpinner, stoneLabel, stonePercentSpinner, averageLabel, averageSpinner, maximumLabel, cb, beginButton);
         Button restart = new Button("Back to test menu");
         
         beginButton.setOnAction(e -> {
             Label resultLabel = new Label();
+            int iterations = (int) iterationSpinner.getValue();
+            int stonePercent = (int) stonePercentSpinner.getValue();
             int average = (int) averageSpinner.getValue();
             int maximum = (int) cb.getValue();
-            if (this.performanceTests.floodFillPerformanceTests(average, maximum)) {
+            if (this.performanceTests.floodFillPerformanceTests(iterations, stonePercent, average, maximum)) {
+                resultLabel.setText("Results succesfully written to file!");
+            } else {
+                resultLabel.setText("File not found");
+            }
+            box.getChildren().clear();
+            box.getChildren().addAll(resultLabel, restart);
+        });
+        
+        restart.setOnAction(e -> {
+            performanceTestView(stage);
+        });
+        
+        Scene scene = new Scene(border, 1200, 800);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    private void walkSpawnTestView(Stage stage) {
+        Label digLabel = new Label("Random walk's dig percent");
+        Spinner digSpinner = new Spinner((int) 1, (int) 100, (int) 45);
+        Label averageLabel = new Label("How many runs to average");
+        Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
+        Label maximumLabel = new Label("Dungeon's maximum size in cells");
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(100, 1024, 4096, 10000, 40000, 90000, 160000, 250000, 360000, 640000, 1000000));
+        cb.setValue(10000);        
+        Button beginButton = new Button("Begin performance test");
+        
+        VBox box = getVBox();
+        
+        BorderPane border = new BorderPane(); 
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
+        border.setCenter(box);
+        
+        
+        box.getChildren().addAll(digLabel, digSpinner, averageLabel, averageSpinner, maximumLabel, cb, beginButton);
+        Button restart = new Button("Back to test menu");
+        
+        beginButton.setOnAction(e -> {
+            Label resultLabel = new Label();
+            int digPercent = (int) digSpinner.getValue();
+            int average = (int) averageSpinner.getValue();
+            int maximum = (int) cb.getValue();
+            if (this.performanceTests.randomWalkSpawnPerformanceTests(digPercent, average, maximum)) {
+                resultLabel.setText("Results succesfully written to file!");
+            } else {
+                resultLabel.setText("File not found");
+            }
+            box.getChildren().clear();
+            box.getChildren().addAll(resultLabel, restart);
+        });
+        
+        restart.setOnAction(e -> {
+            performanceTestView(stage);
+        });
+        
+        Scene scene = new Scene(border, 1200, 800);
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    private void walkDigTestView(Stage stage) {
+        Label spawnLabel = new Label("Random walk's spawn chance for new walker");
+        Spinner spawnSpinner = new Spinner((int) 1, (int) 100, (int) 2);
+        Label averageLabel = new Label("How many runs to average");
+        Spinner averageSpinner = new Spinner((int) 1, (int) 100, (int) 10);
+        Label maximumLabel = new Label("Dungeon's maximum size in cells");
+        ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(100, 1024, 4096, 10000, 40000, 90000, 160000, 250000, 360000, 640000, 1000000));
+        cb.setValue(10000);        
+        Button beginButton = new Button("Begin performance test");
+        
+        VBox box = getVBox();
+        
+        BorderPane border = new BorderPane(); 
+        border.setPadding(new Insets(10));
+        
+        Button mainMenu = new Button("Main menu");
+        mainMenu.setOnAction(e -> {
+            start(stage);
+        });
+        
+        border.setTop(mainMenu);
+        
+        border.setCenter(box);
+        
+        
+        box.getChildren().addAll(spawnLabel, spawnSpinner, averageLabel, averageSpinner, maximumLabel, cb, beginButton);
+        Button restart = new Button("Back to test menu");
+        
+        beginButton.setOnAction(e -> {
+            Label resultLabel = new Label();
+            int spawnPercent = (int) spawnSpinner.getValue();
+            int average = (int) averageSpinner.getValue();
+            int maximum = (int) cb.getValue();
+            if (this.performanceTests.randomWalkDigPerformanceTests(spawnPercent, average, maximum)) {
                 resultLabel.setText("Results succesfully written to file!");
             } else {
                 resultLabel.setText("File not found");
@@ -407,9 +539,9 @@ public class GUI extends Application {
     }
     
     private VBox getVBox() {
-        VBox box = new VBox();
+        VBox box = new VBox(2);
         box.setAlignment(Pos.CENTER);
-        box.setPadding(new Insets(10));
+        box.setPadding(new Insets(20));
         return box;
     }
     

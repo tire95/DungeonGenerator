@@ -6,39 +6,61 @@
 
 package domain;
 
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Test class for dungeon
+ * @author timot
+ */
 public class TestDungeon {
     
     private Dungeon testDungeon;
 
+    /**
+     *
+     */
     public TestDungeon() {
     }
 
+    /**
+     *
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     *
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         testDungeon = new Dungeon(10, 5);
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testNeighborCheck() {
         // check that a cell with no stone neighbors gives 0
@@ -52,12 +74,18 @@ public class TestDungeon {
         assertEquals(3, testDungeon.checkNumberOfStoneNeighbors(0, 2));
     }
 
+    /**
+     *
+     */
     @Test
     public void testDimensionGetters() {
         assertEquals(10, testDungeon.getY());
         assertEquals(5, testDungeon.getX());
     }
 
+    /**
+     *
+     */
     @Test
     public void testCellChangersAndChecker() {
         assertTrue(testDungeon.cellIsFloor(2, 2));
@@ -76,6 +104,9 @@ public class TestDungeon {
         assertFalse(testDungeon.cellIsStone(0, 0));
     }
     
+    /**
+     *
+     */
     @Test
     public void testGridSetter() {
         int[][] newGrid = new int[5][2];
@@ -84,6 +115,9 @@ public class TestDungeon {
         Assert.assertArrayEquals(newGrid, testDungeon.getGrid());
     }
 
+    /**
+     *
+     */
     @Test
     public void testCleanUp1() {
         for (int i = 0; i < 3; i++) {
@@ -105,6 +139,9 @@ public class TestDungeon {
         assertTrue(testDungeon.cellIsFloor(8, 3));
     }
     
+    /**
+     *
+     */
     @Test
     public void testCleanUp2() {
         testDungeon.setGrid(new int[20][10]);
@@ -137,6 +174,9 @@ public class TestDungeon {
         
     }
     
+    /**
+     *
+     */
     @Test
     public void testDeepClone() {
         testDungeon.changeCellToStone(0, 0);

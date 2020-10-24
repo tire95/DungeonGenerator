@@ -13,9 +13,9 @@ import domain.Cell;
  * @author timot
  */
 public class CellQueue {
-    private int rear;   // index of last item
-    private int front;  // index of first item
-    private int size;   // number of items in queue
+    private int lastItem;   // index of last item
+    private int firstItem;  // index of first item
+    private int size;       // how large the queue array is
     private Cell[] queue;
     
     /**
@@ -25,7 +25,7 @@ public class CellQueue {
     public CellQueue(int size) {
         this.size = size;
         this.queue = new Cell[size];
-        this.rear = this.front = -1;
+        this.lastItem = this.firstItem = -1;
     }
     
     /**
@@ -35,11 +35,11 @@ public class CellQueue {
     public void enqueue(Cell cell) {
 
         // if the queue is full, double the size
-        if (this.rear == this.size - 1) {
+        if (this.lastItem == this.size - 1) {
             growQueue();
         }
-        this.rear++;
-        this.queue[this.rear] = cell;
+        this.lastItem++;
+        this.queue[this.lastItem] = cell;
     }
     
     /**
@@ -49,37 +49,37 @@ public class CellQueue {
     public Cell dequeue() {
         
         // if the queue is only quarter full, half the size
-        if ((this.rear - this.front <= this.size / 4) && (this.size >= 20)) {
+        if ((this.lastItem - this.firstItem <= this.size / 4) && (this.size >= 20)) {
             reduceQueue();
         }
-        this.front++;
-        return this.queue[this.front];
+        this.firstItem++;
+        return this.queue[this.firstItem];
     }
     
     private void growQueue() {
         Cell[] oldQueue = this.queue;
         this.size *= 2;
         this.queue = new Cell[this.size];
-        int f = this.front;
-        for (int i = 0; i < (this.rear - this.front); i++) {
+        int f = this.firstItem;
+        for (int i = 0; i < (this.lastItem - this.firstItem); i++) {
             f++;
             this.queue[i] = oldQueue[f];
         }
-        this.rear -= this.front + 1;
-        this.front = -1;
+        this.lastItem -= this.firstItem + 1;
+        this.firstItem = -1;
     }
 
     private void reduceQueue() {
         Cell[] oldQueue = this.queue;
-        this.size = this.size / 2;
+        this.size /= 2;
         this.queue = new Cell[this.size];
-        int f = this.front;
-        for (int i = 0; i < (this.rear - this.front); i++) {
+        int f = this.firstItem;
+        for (int i = 0; i < (this.lastItem - this.firstItem); i++) {
             f++;
             this.queue[i] = oldQueue[f];
         }
-        this.rear -= this.front + 1;
-        this.front = -1;
+        this.lastItem -= this.firstItem + 1;
+        this.firstItem = -1;
     }
     
     /**
@@ -87,7 +87,7 @@ public class CellQueue {
      * @return true if empty
      */
     public boolean isEmpty() {
-        return this.rear == this.front;
+        return this.lastItem == this.firstItem;
     }
     
     /**
@@ -95,7 +95,7 @@ public class CellQueue {
      * @return size
      */
     public int size() {
-        return this.rear - this.front;
+        return this.lastItem - this.firstItem;
     }
     
     /**
