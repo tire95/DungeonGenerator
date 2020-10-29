@@ -20,8 +20,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
-    - name: Change directory
-      run: cd DungeonGenerator
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Test with Gradle
