@@ -20,6 +20,8 @@ import org.junit.Test;
  */
 public class TestRandomWalk {
     private int digPercent;
+	private int digPercent2;
+	private int digPercent3;
     private RandomWalk testRandomWalk;
     private RandomWalk testRandomWalk2;
     private RandomWalk testRandomWalk3;
@@ -52,11 +54,13 @@ public class TestRandomWalk {
     @Before
     public void setUp() {
         digPercent = 30;
+		digPercent2 = 15;
+		digPercent3 = 60;
         testRandomWalk = new RandomWalk(10, 10, 10, digPercent, 50, false);
-        testRandomWalk2 = new RandomWalk(50, 100, 30, digPercent / 2, 50, false);
-        testRandomWalk3 = new RandomWalk(3, 20, 1, digPercent * 2, 50, false);
+        testRandomWalk2 = new RandomWalk(50, 100, 30, digPercent2, 50, false);
+        testRandomWalk3 = new RandomWalk(3, 20, 1, digPercent3, 50, false);
         testRandomWalk4 = new RandomWalk(20, 45, 0, digPercent, 50, true);
-        testRandomWalk5 = new RandomWalk(100, 300, 5, digPercent / 2, 33, true);
+        testRandomWalk5 = new RandomWalk(100, 300, 5, digPercent2, 33, true);
     }
 
     /**
@@ -101,7 +105,7 @@ public class TestRandomWalk {
                 }
             }
         }
-        assertTrue(digPercent / 2 <= (100 * dugCells / (dungeonX * dungeonY)));
+        assertTrue(digPercent2 <= (100 * dugCells / (dungeonX * dungeonY)));
     }
     
     /**
@@ -120,7 +124,7 @@ public class TestRandomWalk {
                 }
             }
         }
-        assertTrue(digPercent * 2 <= (100 * dugCells / (dungeonX * dungeonY)));
+        assertTrue(digPercent3 <= (100 * dugCells / (dungeonX * dungeonY)));
     }    
     
     /**
@@ -158,7 +162,7 @@ public class TestRandomWalk {
                 }
             }
         }
-        assertTrue(digPercent / 2 <= (100 * dugCells / (dungeonX * dungeonY)));
+        assertTrue(digPercent2 <= (100 * dugCells / (dungeonX * dungeonY)));
     }
     
 }
