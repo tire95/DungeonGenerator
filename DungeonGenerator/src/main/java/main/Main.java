@@ -15,7 +15,7 @@ import ui.GUI;
 public class Main {
     
     /**
-     * Main method for launching JavaFX GUI
+     * Main method for launching application
      * @param args command-line arguments
      */
     public static void main(String[] args) {

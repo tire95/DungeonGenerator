@@ -45,7 +45,7 @@ public class GUI extends Application {
     private PerformanceTests performanceTests = new PerformanceTests();
     
     /**
-     * Main method for launching JavaFX GUI
+     * Method for launching JavaFX GUI
      * @param args command-line arguments
      */
     public static void main(String[] args) {
